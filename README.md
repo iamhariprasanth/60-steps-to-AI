@@ -24,3 +24,7 @@ Day 4:
 -  pyautoGUI - Handson
 -  playWright - Handson
 
+Day 5:
+- Fill in the sheet with your three questions.
+- API - Flask- Fast API
+- Streamlit
