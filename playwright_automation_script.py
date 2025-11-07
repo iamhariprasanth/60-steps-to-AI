@@ -12,7 +12,7 @@ with sync_playwright() as p:
     page.click('button[type="submit"], input[type="submit"]')
     
     # Wait for post-submit change (e.g., password field or error)
-    page.wait_for_timeout(20000)  # 2s pause to observe
+    page.wait_for_timeout(2000)  # 2s pause to observe
     print(f"Submit clicked! Current page URL: {page.url}")
     print(f"Page title after submit: {page.title()}")
     browser.close()
