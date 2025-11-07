@@ -18,6 +18,7 @@ Day 3:
 -  Python file operations
 -  Python using AI tools
 -  Vscode practice
+
 Day 4:
 -   Fill in the sheet with your three questions.
 -  pyautoGUI - Handson
