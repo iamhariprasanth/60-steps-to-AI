@@ -28,3 +28,19 @@ Day 5:
 - Fill in the sheet with your three questions.
 - API - Flask- Fast API
 - Streamlit
+
+Day 6:
+- Fill in the sheet with your three questions.
+
+
+Day 7:
+- Fill in the sheet with your three questions.
+
+Day 8:
+- Fill in the sheet with your three questions.
+- API - Key Purches and LLM
+
+
+Day 9:
+- Fill in the sheet with your three questions.
+- Gen AI Tools
