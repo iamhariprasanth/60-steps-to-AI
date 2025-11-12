@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Splitter - Split Bills Fairly</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Elements */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Money Animation */
+        .money {
+            position: absolute;
+            font-size: 2.5em;
+            opacity: 0.6;
+            animation: floatMoney 15s infinite linear;
+            user-select: none;
+        }
+
+        .money:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+        .money:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 18s; }
+        .money:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 15s; }
+        .money:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 20s; }
+        .money:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 14s; }
+        .money:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 16s; }
+        .money:nth-child(7) { left: 70%; animation-delay: 2.5s; animation-duration: 13s; }
+        .money:nth-child(8) { left: 80%; animation-delay: 4.5s; animation-duration: 17s; }
+        .money:nth-child(9) { left: 90%; animation-delay: 1.5s; animation-duration: 19s; }
+        .money:nth-child(10) { left: 15%; animation-delay: 6s; animation-duration: 21s; }
+        .money:nth-child(11) { left: 25%; animation-delay: 7s; animation-duration: 11s; }
+        .money:nth-child(12) { left: 35%; animation-delay: 8s; animation-duration: 22s; }
+        .money:nth-child(13) { left: 45%; animation-delay: 9s; animation-duration: 13s; }
+        .money:nth-child(14) { left: 55%; animation-delay: 10s; animation-duration: 16s; }
+        .money:nth-child(15) { left: 65%; animation-delay: 11s; animation-duration: 18s; }
+
+        @keyframes floatMoney {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Friends Group Animation */
+        .friends-group {
+            position: absolute;
+            font-size: 4em;
+            opacity: 0.3;
+            animation: floatFriends 20s infinite ease-in-out;
+            user-select: none;
+        }
+
+        .friends-group.left {
+            left: -100px;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .friends-group.right {
+            right: -100px;
+            top: 60%;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatFriends {
+            0%, 100% {
+                transform: translateX(0) translateY(0) scale(1);
+            }
+            25% {
+                transform: translateX(50px) translateY(-30px) scale(1.1);
+            }
+            50% {
+                transform: translateX(100px) translateY(0) scale(1);
+            }
+            75% {
+                transform: translateX(50px) translateY(30px) scale(1.1);
+            }
+        }
+
+        /* Rotating Money Coins */
+        .money-coin {
+            position: absolute;
+            font-size: 3em;
+            opacity: 0.4;
+            animation: rotateCoin 8s infinite linear;
+            user-select: none;
+        }
+
+
+        @keyframes rotateCoin {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+            padding-bottom: 50px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-section {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px 0;
+            margin: -30px -30px 20px -30px;
+            padding-left: 30px;
+            padding-right: 30px;
+            z-index: 10;
+            border-bottom: 2px solid #f0f0f0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 0;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .people-container {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        .form-content {
+            padding-bottom: 20px;
+        }
+
+        .person-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .person-header {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-settled {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-owes {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-gets_back {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .transactions {
+            margin-top: 20px;
+        }
+
+        .transaction-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-arrow {
+            color: #667eea;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        .amount {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .per-person {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .transaction-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .transaction-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0;
+            }
+
+            .money {
+                font-size: 2em;
+            }
+
+            .friends-group {
+                font-size: 3em;
+            }
+
+            .money-coin {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <!-- Floating Money -->
+        <div class="money">💰</div>
+        <div class="money">💵</div>
+        <div class="money">💴</div>
+        <div class="money">💶</div>
+        <div class="money">💷</div>
+        <div class="money">💸</div>
+        <div class="money">💳</div>
+        <div class="money">💰</div>
+        <div class="money">💵</div>
+        <div class="money">💴</div>
+        <div class="money">💶</div>
+        <div class="money">💷</div>
+        <div class="money">💸</div>
+        <div class="money">💳</div>
+        <div class="money">💰</div>
+
+        <!-- Friends Group -->
+        <div class="friends-group left">👥</div>
+        <div class="friends-group right">👫</div>
+
+        <!-- Rotating Money Coins -->
+        <div class="money-coin" style="top: 10%; left: 5%; animation-delay: 0s;">🪙</div>
+        <div class="money-coin" style="top: 30%; right: 10%; animation-delay: 2s;">🪙</div>
+        <div class="money-coin" style="top: 50%; left: 8%; animation-delay: 4s;">🪙</div>
+        <div class="money-coin" style="top: 70%; right: 5%; animation-delay: 6s;">🪙</div>
+        <div class="money-coin" style="top: 85%; left: 15%; animation-delay: 1s;">🪙</div>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>💰 Expense Splitter</h1>
+            <p class="subtitle">Split bills fairly among friends</p>
+        </div>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if not results %}
+        <div class="form-content">
+            <form method="POST" id="expenseForm">
+                <div class="form-group">
+                    <label for="total_amount">Total Amount (₹)</label>
+                    <input type="number" id="total_amount" name="total_amount" step="0.01" min="0" required placeholder="Enter total bill amount">
+                </div>
+
+                <div class="form-group">
+                    <label for="num_people">Number of People</label>
+                    <input type="number" id="num_people" name="num_people" min="1" required placeholder="How many people?">
+                </div>
+
+                <div id="peopleContainer" class="people-container" style="display: none;">
+                    <h3 style="margin-bottom: 20px; color: #333;">People Details</h3>
+                    <div id="peopleFields"></div>
+                </div>
+
+                <button type="submit" class="btn">Calculate Split</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="form-content">
+        <div class="results">
+            <div class="per-person">
+                Each person should pay: ₹{{ results.per_person }}
+            </div>
+
+            <div class="summary-card">
+                <h2>Summary</h2>
+                {% for item in results.summary %}
+                <div class="summary-item">
+                    <span><strong>{{ item.name }}</strong></span>
+                    <span>
+                        {% if item.status == 'settled' %}
+                            <span class="status-badge status-settled">✓ Settled</span>
+                        {% elif item.status == 'owes' %}
+                            <span class="status-badge status-owes">Owes ₹{{ item.amount }}</span>
+                        {% elif item.status == 'gets_back' %}
+                            <span class="status-badge status-gets_back">Gets back ₹{{ item.amount }}</span>
+                        {% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if results.transactions %}
+            <div class="transactions">
+                <h2>Transactions</h2>
+                {% for transaction in results.transactions %}
+                <div class="transaction-item">
+                    <span><strong>{{ transaction.from }}</strong></span>
+                    <span class="transaction-arrow">→</span>
+                    <span><strong>{{ transaction.to }}</strong></span>
+                    <span class="amount">₹{{ transaction.amount }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="GET" style="margin-top: 20px;">
+                <button type="submit" class="btn btn-secondary">Split Another Bill</button>
+            </form>
+        </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const numPeopleInput = document.getElementById('num_people');
+        const peopleContainer = document.getElementById('peopleContainer');
+        const peopleFields = document.getElementById('peopleFields');
+
+        numPeopleInput.addEventListener('input', function() {
+            const numPeople = parseInt(this.value) || 0;
+            
+            if (numPeople > 0) {
+                peopleContainer.style.display = 'block';
+                peopleFields.innerHTML = '';
+                
+                for (let i = 1; i <= numPeople; i++) {
+                    const personCard = document.createElement('div');
+                    personCard.className = 'person-card';
+                    personCard.innerHTML = `
+                        <div class="person-header">Person ${i}</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name_${i}">Name (optional)</label>
+                                <input type="text" id="name_${i}" name="name_${i}" placeholder="Enter name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email_${i}">Email (optional)</label>
+                                <input type="email" id="email_${i}" name="email_${i}" placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contribution_${i}">Contribution (₹) - Optional</label>
+                            <input type="number" id="contribution_${i}" name="contribution_${i}" step="0.01" min="0" placeholder="Amount paid (leave empty if 0)">
+                        </div>
+                    `;
+                    peopleFields.appendChild(personCard);
+                }
+            } else {
+                peopleContainer.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
