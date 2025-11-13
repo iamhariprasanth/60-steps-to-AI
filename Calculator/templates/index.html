@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator">
+            <div class="calculator-header">
+                <h1>Calculator</h1>
+            </div>
+            
+            <div class="display-container">
+                <div class="display" id="result">0</div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="num1">First Number</label>
+                    <input type="number" id="num1" step="any" placeholder="Enter number" value="">
+                </div>
+
+                <div class="input-group">
+                    <label for="operation">Operation</label>
+                    <select id="operation">
+                        <option value="+">Addition (+)</option>
+                        <option value="-">Subtraction (-)</option>
+                        <option value="*">Multiplication (×)</option>
+                        <option value="/">Division (÷)</option>
+                        <option value="%">Modulus (%)</option>
+                        <option value="**">Power (^)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="num2">Second Number</label>
+                    <input type="number" id="num2" step="any" placeholder="Enter number" value="">
+                </div>
+            </div>
+
+            <div class="button-section">
+                <button class="btn btn-clear" id="clearBtn">Clear</button>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        const num1Input = document.getElementById('num1');
+        const num2Input = document.getElementById('num2');
+        const operationSelect = document.getElementById('operation');
+        const resultDisplay = document.getElementById('result');
+        const clearBtn = document.getElementById('clearBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        function calculate() {
+            const num1 = parseFloat(num1Input.value);
+            const num2 = parseFloat(num2Input.value);
+            const operation = operationSelect.value;
+
+            // Clear previous error
+            errorMessage.textContent = '';
+            errorMessage.style.display = 'none';
+
+            // Validate inputs
+            if (isNaN(num1) || isNaN(num2)) {
+                resultDisplay.textContent = '0';
+                return;
+            }
+
+            // Make API call
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    num1: num1,
+                    num2: num2,
+                    operation: operation
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultDisplay.textContent = formatResult(data.result);
+                } else {
+                    errorMessage.textContent = data.error || 'An error occurred';
+                    errorMessage.style.display = 'block';
+                    resultDisplay.textContent = 'Error';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'block';
+                resultDisplay.textContent = 'Error';
+            });
+        }
+
+        function formatResult(result) {
+            // Format large numbers and decimals
+            if (result % 1 === 0) {
+                return result.toString();
+            } else {
+                // Limit decimal places for readability
+                return parseFloat(result.toFixed(10)).toString();
+            }
+        }
+
+        function clearCalculator() {
+            num1Input.value = '';
+            num2Input.value = '';
+            operationSelect.value = '+';
+            resultDisplay.textContent = '0';
+            errorMessage.textContent = '';
+            errorMessage.style.display = 'none';
+            num1Input.focus();
+        }
+
+        // Event listeners for instant calculation
+        num1Input.addEventListener('input', calculate);
+        num2Input.addEventListener('input', calculate);
+        operationSelect.addEventListener('change', calculate);
+
+        // Clear button
+        clearBtn.addEventListener('click', clearCalculator);
+
+        // Focus first input on load
+        window.addEventListener('load', () => {
+            num1Input.focus();
+        });
+    </script>
+</body>
+</html>
+
