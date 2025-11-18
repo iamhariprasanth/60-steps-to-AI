@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ Unit Converter</h1>
+            <p>Real-time conversion for currency, temperature, length & weight</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="currency">💱 Currency</button>
+            <button class="tab-btn" data-tab="temperature">🌡️ Temperature</button>
+            <button class="tab-btn" data-tab="length">📏 Length</button>
+            <button class="tab-btn" data-tab="weight">⚖️ Weight</button>
+        </div>
+
+        <!-- Currency Converter -->
+        <div id="currency" class="tab-content active">
+            <div class="converter-box">
+                <h2>Currency Conversion</h2>
+                <div class="converter-grid">
+                    <div class="input-group">
+                        <label for="currency-from">From:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="currency-from" 
+                                placeholder="Enter amount"
+                                value="1"
+                                step="0.01"
+                            >
+                            <select id="currency-from-unit">
+                                <option value="INR">INR (₹)</option>
+                                <option value="USD">USD ($)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-btn">
+                        <button class="swap" onclick="swapUnits('currency')">⇄</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="currency-to">To:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="currency-to" 
+                                placeholder="Result"
+                                disabled
+                            >
+                            <select id="currency-to-unit">
+                                <option value="USD">USD ($)</option>
+                                <option value="INR">INR (₹)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="formula" id="currency-formula"></div>
+            </div>
+        </div>
+
+        <!-- Temperature Converter -->
+        <div id="temperature" class="tab-content">
+            <div class="converter-box">
+                <h2>Temperature Conversion</h2>
+                <div class="converter-grid">
+                    <div class="input-group">
+                        <label for="temp-from">From:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="temp-from" 
+                                placeholder="Enter temperature"
+                                value="0"
+                                step="0.1"
+                            >
+                            <select id="temp-from-unit">
+                                <option value="C">Celsius (°C)</option>
+                                <option value="F">Fahrenheit (°F)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-btn">
+                        <button class="swap" onclick="swapUnits('temperature')">⇄</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="temp-to">To:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="temp-to" 
+                                placeholder="Result"
+                                disabled
+                            >
+                            <select id="temp-to-unit">
+                                <option value="F">Fahrenheit (°F)</option>
+                                <option value="C">Celsius (°C)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="formula" id="temperature-formula"></div>
+            </div>
+        </div>
+
+        <!-- Length Converter -->
+        <div id="length" class="tab-content">
+            <div class="converter-box">
+                <h2>Length Conversion</h2>
+                <div class="converter-grid">
+                    <div class="input-group">
+                        <label for="length-from">From:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="length-from" 
+                                placeholder="Enter length"
+                                value="1"
+                                step="0.01"
+                            >
+                            <select id="length-from-unit">
+                                <option value="cm">Centimeter (cm)</option>
+                                <option value="inch">Inch (in)</option>
+                                <option value="meter">Meter (m)</option>
+                                <option value="km">Kilometer (km)</option>
+                                <option value="mile">Mile (mi)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-btn">
+                        <button class="swap" onclick="swapUnits('length')">⇄</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="length-to">To:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="length-to" 
+                                placeholder="Result"
+                                disabled
+                            >
+                            <select id="length-to-unit">
+                                <option value="inch">Inch (in)</option>
+                                <option value="cm">Centimeter (cm)</option>
+                                <option value="meter">Meter (m)</option>
+                                <option value="km">Kilometer (km)</option>
+                                <option value="mile">Mile (mi)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="formula" id="length-formula"></div>
+            </div>
+        </div>
+
+        <!-- Weight Converter -->
+        <div id="weight" class="tab-content">
+            <div class="converter-box">
+                <h2>Weight Conversion</h2>
+                <div class="converter-grid">
+                    <div class="input-group">
+                        <label for="weight-from">From:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="weight-from" 
+                                placeholder="Enter weight"
+                                value="1"
+                                step="0.01"
+                            >
+                            <select id="weight-from-unit">
+                                <option value="kg">Kilogram (kg)</option>
+                                <option value="lb">Pound (lb)</option>
+                                <option value="g">Gram (g)</option>
+                                <option value="oz">Ounce (oz)</option>
+                                <option value="stone">Stone (st)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="swap-btn">
+                        <button class="swap" onclick="swapUnits('weight')">⇄</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="weight-to">To:</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="weight-to" 
+                                placeholder="Result"
+                                disabled
+                            >
+                            <select id="weight-to-unit">
+                                <option value="lb">Pound (lb)</option>
+                                <option value="kg">Kilogram (kg)</option>
+                                <option value="g">Gram (g)</option>
+                                <option value="oz">Ounce (oz)</option>
+                                <option value="stone">Stone (st)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="formula" id="weight-formula"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 Note: Currency rates are fetched in real-time. Other conversions use standard factors.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
