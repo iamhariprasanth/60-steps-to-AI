@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator">
+            <div class="calculator-header">
+                <h1>BMI Calculator</h1>
+            </div>
+            
+            <div class="display-container">
+                <div class="display" id="bmiValue">--</div>
+                <div class="category-display" id="categoryDisplay"></div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" step="0.1" placeholder="Enter height in cm" value="" min="1" max="300">
+                </div>
+
+                <div class="input-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" step="0.1" placeholder="Enter weight in kg" value="" min="1" max="1000">
+                </div>
+            </div>
+
+            <div class="button-section">
+                <button class="btn btn-clear" id="clearBtn">Clear</button>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        const heightInput = document.getElementById('height');
+        const weightInput = document.getElementById('weight');
+        const bmiValueDisplay = document.getElementById('bmiValue');
+        const categoryDisplay = document.getElementById('categoryDisplay');
+        const clearBtn = document.getElementById('clearBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        function calculateBMI() {
+            const height = parseFloat(heightInput.value);
+            const weight = parseFloat(weightInput.value);
+
+            // Clear previous error and category
+            errorMessage.textContent = '';
+            errorMessage.style.display = 'none';
+            categoryDisplay.textContent = '';
+            categoryDisplay.className = 'category-display';
+
+            // Validate inputs
+            if (isNaN(height) || isNaN(weight)) {
+                bmiValueDisplay.textContent = '--';
+                return;
+            }
+
+            if (height <= 0 || weight <= 0) {
+                bmiValueDisplay.textContent = '--';
+                return;
+            }
+
+            // Make API call
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    height: height,
+                    weight: weight
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    bmiValueDisplay.textContent = data.bmi;
+                    categoryDisplay.textContent = data.category;
+                    categoryDisplay.className = 'category-display category-' + data.category.toLowerCase();
+                } else {
+                    errorMessage.textContent = data.error || 'An error occurred';
+                    errorMessage.style.display = 'block';
+                    bmiValueDisplay.textContent = 'Error';
+                    categoryDisplay.textContent = '';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'block';
+                bmiValueDisplay.textContent = 'Error';
+                categoryDisplay.textContent = '';
+            });
+        }
+
+        function clearCalculator() {
+            heightInput.value = '';
+            weightInput.value = '';
+            bmiValueDisplay.textContent = '--';
+            categoryDisplay.textContent = '';
+            categoryDisplay.className = 'category-display';
+            errorMessage.textContent = '';
+            errorMessage.style.display = 'none';
+            heightInput.focus();
+        }
+
+        // Event listeners for instant calculation
+        heightInput.addEventListener('input', calculateBMI);
+        weightInput.addEventListener('input', calculateBMI);
+
+        // Clear button
+        clearBtn.addEventListener('click', clearCalculator);
+
+        // Focus first input on load
+        window.addEventListener('load', () => {
+            heightInput.focus();
+        });
+    </script>
+</body>
+</html>
+

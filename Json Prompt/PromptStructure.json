@@ -1,0 +1,137 @@
+{
+  "project_id": "AI_Evo_Infographic_",
+  "requester": "CreativeDirector_ReadabilityFirst",
+  "task": "Design a single, ultra-high-definition infographic image illustrating the evolution of Artificial Intelligence from 1900 to November 2025. All key event labels and dates must be clearly visible and legible to a common viewer without needing to zoom excessively.",
+  
+  "ai_persona": {
+    "role": "Master Infographic Designer and Data Visualizer",
+    "goal": "To synthesize complex historical data into a single, beautiful, and exceptionally clear visual narrative. The final product must balance aesthetic elegance with immediate, non-ambiguous data legibility. Readability is the primary success metric."
+  },
+
+  "concept": {
+    "title": "The Ascent of Minds: A Visual History of AI",
+    "metaphor": "A dynamic, upward-flowing 'evolutionary tree' or 'digital vine' that grows from a foundational root (early theory) into a dense, multi-branched canopy (modern AI). Each branch represents a core AI domain, and luminous 'fruits' or 'blossoms' on these branches are major milestones.",
+    "core_visual_dynamic": "The base (left-bottom) begins with a single, abstract 'seed' or 'root' of theoretical computing. As it ascends diagonally upwards and to the right, it develops into a robust trunk. Around the 1950s, the first major branches (Logic/Expert Systems, NLP, Computer Vision) emerge. These branches thicken, intertwine, and grow more complex. Key events are represented by distinctly glowing, labeled nodes/fruits on their respective branches. The top-right (2025) explodes into a vibrant, interconnected 'canopy' with multiple glowing generative AI entities, symbolizing the current multimodal explosion. The overall flow should feel organic yet precisely structured."
+  },
+
+  "style_palette": {
+    "primary_aesthetic": "Futuristic infographic, data visualization, clean digital art, 'glassmorphism' elements for text backplates.",
+    "primary_style": "Sharp vector lines, gradient glows, subtle particle effects for dynamism. High contrast for text readability.",
+    "background": "Dark, muted gradient (e.g., deep indigo to charcoal #0F0F1A to #252530) to ensure foreground elements and text pop.",
+    "color_coding": {
+      "main_trunk_base": "Subtle silver-grey (#C0C0C0)",
+      "branch_logic_expert_systems": "Deep Azure Blue (#007FFF)",
+      "branch_nlp_language": "Emerald Green (#00C853)",
+      "branch_computer_vision": "Vibrant Gold (#FFD700)",
+      "branch_robotics_agents": "Bright Orange-Red (#FF4500)",
+      "branch_deep_reinforcement": "Electric Violet (#BF00FF)",
+      "milestone_nodes_glow": "Pulsing pure white to soft cyan (#FFFFFF to #00FFFF)",
+      "text_color_primary": "Crisp white (#FFFFFF)",
+      "text_color_secondary": "Light grey (#B0B0B0) for timeline markers"
+    }
+  },
+
+  "layout_composition": {
+    "orientation": "Landscape (16:9 or 21:9 for optimal timeline spread)",
+    "flow": "Diagonal bottom-left (1900) to top-right (2025). This allows for natural expansion and visual hierarchy.",
+    "density": "Starts sparse, gradually increases in complexity and density towards the current era, culminating in a rich, interconnected finale.",
+    "text_integration": {
+      "readability_priority": "Absolute maximum. All text must be legible against its background. Use subtle, dark, translucent 'glassmorphism' panels behind text if it crosses complex visual elements.",
+      "font_family": "Clean, bold, sans-serif font (e.g., 'Montserrat Bold', 'Oswald', 'Inter').",
+      "text_hierarchy": {
+        "level_1_major_milestone": "Largest font size. Used for `importance: 3` events. (e.g., 'Nov 2022: ChatGPT Launch').",
+        "level_2_standard_milestone": "Medium font size. Used for `importance: 2` events. (e.g., '1997: Deep Blue Beats Kasparov').",
+        "level_3_contextual_event": "Smallest event font. Used for `importance: 1` events. (e.g., '1957: Perceptron Invented').",
+        "level_4_timeline_markers": "Subtle, secondary font style for the main timeline axis."
+      },
+      "placement": "Each milestone node will have its year and brief event description clearly labeled *adjacent* to it. Labels should have sufficient padding and must not overlap."
+    },
+    "timeline_indicator": "A subtle, clear timeline with year markers (1900, 1925, 1950, 1975, 2000, 2010, 2015, 2020, 2025) running along the bottom edge. Low opacity (e.g., 50%) but sharp."
+  },
+
+  "key_elements_by_era": [
+    {
+      "era": "1900-1940s: Theoretical Foundations",
+      "visual": "A single, foundational 'root' with subtle mathematical symbols. The very beginning of the AI 'vine'.",
+      "milestones": [
+        {"year": "1936", "event": "Turing Machine Conceptualized", "importance": 2}
+      ]
+    },
+    {
+      "era": "1950s: Birth of AI",
+      "visual": "The root thickens, first major branches emerge. The trunk gains a slight, internal glow.",
+      "milestones": [
+        {"year": "1950", "event": "Turing Test Proposed", "importance": 1},
+        {"year": "1956", "event": "Dartmouth Workshop (AI Coined)", "importance": 3},
+        {"year": "1957", "event": "Perceptron Invented", "importance": 1}
+      ]
+    },
+    {
+      "era": "1960s-1970s: Early Explorations & Winter",
+      "visual": "Branches (NLP, Logic) extend, but the overall growth slows, narrows, and slightly dims to represent the 'AI Winter'.",
+      "milestones": [
+        {"year": "1966", "event": "ELIZA Chatbot", "importance": 1},
+        {"year": "1969", "event": "Shakey the Robot", "importance": 1},
+        {"year": "1973", "event": "Lighthill Report (AI Winter Begins)", "importance": 1}
+      ]
+    },
+    {
+      "era": "1980s: Expert Systems & Revival",
+      "visual": "The 'Logic' branch (Azure Blue) becomes prominent. The trunk thaws and visibly expands. Backpropagation appears as a key 'node' igniting future growth.",
+      "milestones": [
+        {"year": "c. 1985", "event": "Expert Systems Peak", "importance": 2},
+        {"year": "1986", "event": "Backpropagation Re-discovery", "importance": 2}
+      ]
+    },
+    {
+      "era": "1990s: Milestone Victories & Data",
+      "visual": "More distinct branching. The 'Computer Vision' branch (Gold) shows early signs of growth.",
+      "milestones": [
+        {"year": "1997", "event": "Deep Blue Beats Kasparov", "importance": 2}
+      ]
+    },
+    {
+      "era": "2000s: The Data Revolution",
+      "visual": "The overall structure becomes significantly denser. ImageNet appears as a large, brightly glowing 'fruit' on the 'Computer Vision' branch, catalyzing its rapid expansion.",
+      "milestones": [
+        {"year": "2009", "event": "ImageNet Dataset Released", "importance": 3}
+      ]
+    },
+    {
+      "era": "2010s: Deep Learning Era",
+      "visual": "A period of explosive growth. Multiple major 'blossoms' appear. Branches begin to intertwine more frequently.",
+      "milestones": [
+        {"year": "2012", "event": "AlexNet (ImageNet Breakthrough)", "importance": 2},
+        {"year": "2016", "event": "AlphaGo Defeats Go Champion", "importance": 2},
+        {"year": "2017", "event": "Transformer Architecture", "importance": 3}
+      ]
+    },
+    {
+      "era": "2020-2025: Generative AI & Multimodality",
+      "visual": "The 'canopy' at the top-right. A vibrant, interwoven network of all branches, intensely glowing. The 'Transformer' node acts as a central hub, from which new generative entities (represented by distinct, brighter, more complex glowing forms) emerge and interact. The very edge should feel open-ended, hinting at future possibilities.",
+      "milestones": [
+        {"year": "2020", "event": "GPT-3 Released", "importance": 2},
+        {"year": "2022", "event": "DALL-E 2 / Stable Diffusion", "importance": 2},
+        {"year": "Nov 2022", "event": "ChatGPT Launch (Mass Adoption)", "importance": 3},
+        {"year": "2023-2024", "event": "GPT-4 / Multimodal AI", "importance": 2},
+        {"year": "2025", "event": "Advanced AI Agents / Video Gen", "importance": 2}
+      ]
+    }
+  ],
+
+  "constraints": {
+    "positive_guidance": "Emphasize: visual clarity, hierarchical flow (importance matters), dynamic energy, legible typography, high-contrast design, and a clean, professional finish.",
+    "negative_prompt": "Avoid: blurry text, unreadable labels, overlapping text, overly abstract representation that hides information, cluttered design, primary colors only, cartoonish elements, realistic human figures, stock photography look.",
+    "output_quality": "Ultra-HD resolution (minimum 4K, 3840x2160), sharp anti-aliasing, clear distinction between foreground and background elements."
+  },
+  
+  "self_correction_checklist": {
+    "instruction": "Before outputting the final image, review it against these checks:",
+    "checks": [
+      "1. Readability: Is every single milestone label (from importance 1 to 3) legible at 100% view? Are any labels overlapping?",
+      "2. Flow: Does the eye naturally follow the timeline from bottom-left (1900) to top-right (2025)?",
+      "3. Hierarchy: Are the `importance: 3` nodes (Dartmouth, ImageNet, Transformer, ChatGPT) clearly more significant (larger, brighter, more central) than the `importance: 1` nodes?",
+      "4. Accuracy: Are all events placed in the correct chronological era and on the correct conceptual branch (e.g., ImageNet on the 'Vision' branch)?"
+    ]
+  }
+}

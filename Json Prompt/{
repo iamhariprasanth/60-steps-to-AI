@@ -1,0 +1,99 @@
+{
+  "prompt_title": "ஒரு நெல்மணியின் இறுதிப் பயணம்: ஏழு காட்சிகள் (A Paddy Grain's Final Journey: Seven Scenes)",
+  "task_description": "ஒரு நெல் மணியின் முழுமையான பயணத்தையும், ஒவ்வொரு கட்டத்திலும் மற்ற நெல்மணிகள் நீக்கப்படுவதையும், இறுதியாக மனிதன் உணவை வீணடிப்பதையும் காட்டும் ஏழு காட்சிகளை உருவாக்கவும். ஒவ்வொரு காட்சியிலும் தமிழ் உரையாடல் இடம்பெற வேண்டும்.",
+  "overall_tone": "Poignant, detailed, and cautionary.",
+  "setting_context": "The journey of a single Paddy (Nel) grain, 'செம்மல்' (Semmal, meaning 'gem' or 'prime'), from the field to a modern urban kitchen.",
+  "scenes": [
+    {
+      "scene_number": 1,
+      "title": "விவசாய நிலத்தில் (In the Agricultural Field)",
+      "location": "சேறும் சகதியுமான நெல் வயல், கிராமம்.",
+      "action": "செம்மல் மற்றும் ஆயிரக்கணக்கான நெல் நாற்றுகள் நடவு செய்யப்படுகின்றன. விவசாயி களைகளைப் பிடுங்குகிறார்.",
+      "elimination_event": "களையெடுப்பின்போது, சில பலவீனமான நாற்றுகள் அல்லது பூச்சி தாக்கிய நாற்றுகள் 'தள்ளிவிடப்படுகின்றன' அல்லது மிதிக்கப்படுகின்றன.",
+      "dialogue": {
+        "speaker": "விவசாயி (Farmer)",
+        "tamil": "மழை வரணும் சாமி... இந்த மழையில இந்த நாத்துல ஒரு நாத்தாவது மிஞ்சணும். களைகளைப் பிடுங்குவோம், இல்லேன்னா பயிர் போயிடும்.",
+        "english_translation": "Rain must come, oh Lord... At least one seedling should survive in this rain. Let's pluck the weeds, otherwise, the crop will be lost."
+      },
+      "paddy_count_status": "Thousands -> Hundreds (after weeding and initial loss)"
+    },
+    {
+      "scene_number": 2,
+      "title": "அறுவடைக்குப் பின் (After Harvest)",
+      "location": "உலர்ந்த களத்துமேடு (Threshing ground).",
+      "action": "அறுவடை செய்யப்பட்ட நெற்கதிர்கள் (Paddy stalks) அடித்து, நெல் தனியாகப் பிரிக்கப்படுகிறது. செம்மல் ஒரு சாக்கில் அடைக்கப்படுகிறது.",
+      "elimination_event": "அடிக்கும்போது, சில நெல் மணிகள் தரையில் சிதறி, பறவைகள் அல்லது எறும்புகளுக்கு உணவாகின்றன; சில எடை குறைவாக இருப்பதால் சல்லடையில் நீக்கப்படுகின்றன.",
+      "dialogue": {
+        "speaker": "விவசாயியின் மகன் (Farmer's Son)",
+        "tamil": "அப்ha! இந்த நெல்லு நல்லா பழுத்திருக்கு. ஆனாலும் சிலது தரையில சிதறுது. கவனமா எடுங்க, ஒரு மணியும் வீணாகக் கூடாது.",
+        "english_translation": "Mother! This paddy has ripened well. But some are scattering on the ground. Take care, not a single grain should be wasted."
+      },
+      "paddy_count_status": "Hundreds -> Many Bags"
+    },
+    {
+      "scene_number": 3,
+      "title": "அரிசி ஆலையில் (In the Rice Mill)",
+      "location": "மிகவும் சத்தமான அரிசி அரைக்கும் ஆலை (Milling machine).",
+      "action": "செம்மல் மற்றும் அதன் சகோதர நெல்கள் இயந்திரத்திற்குள் செலுத்தப்பட்டு, உமி நீக்கப்பட்டு, வெள்ளை அரிசியாக மாறுகின்றன.",
+      "elimination_event": "உமி நீக்கும் செயல்முறையின்போது, உடைந்த அல்லது சேதமடைந்த சில மணிகள் (Broken rice/Kurunai) தனியாகப் பிரிக்கப்பட்டு, விலங்குகளுக்கு உணவாக அனுப்பப்படுகின்றன.",
+      "dialogue": {
+        "speaker": "ஆலை ஊழியர் (Mill Worker)",
+        "tamil": "இயந்திரத்தை வேகமாக்கலாம். உடைந்த குருணைகளைத் தனியா பிரிச்சு வைங்க. அது வீட்டு உபயோகத்துக்கு வராது.",
+        "english_translation": "We can speed up the machine. Separate the broken rice pieces. They won't be used for household consumption."
+      },
+      "paddy_count_status": "Bags of Paddy -> Bags of Rice (with Kurunai removed)"
+    },
+    {
+      "scene_number": 4,
+      "title": "பளபளப்பான பையில் (In the Shiny Bag)",
+      "location": "பேக்கிங் யூனிட் (Packing Unit).",
+      "action": "செம்மல் இப்போது ஒரு அரிசியாக, சுத்தமான, கவர்ச்சியான பிளாஸ்டிக் பையில் மற்ற சுத்தமான அரிசிகளுடன் நிரப்பப்படுகிறது.",
+      "elimination_event": "பேக்கிங்கிற்கு முன் தரத்தை உறுதிப்படுத்தும் போது, கருப்பான அல்லது நிறமாற்றம் அடைந்த சில அரிசிகள் இயந்திரத்தின் மூலம் நிராகரிக்கப்படுகின்றன.",
+      "dialogue": {
+        "speaker": "தரக் கட்டுப்பாட்டு மேற்பார்வையாளர் (Quality Supervisor)",
+        "tamil": "இந்த லோட் தரமா இருக்கு. பேக்கிங் மெஷினோட சென்சாரை செக் பண்ணுங்க. தூசி, அழுக்கு இல்லாத அரிசி மட்டும்தான் உள்ள போகணும்.",
+        "english_translation": "This load is high quality. Check the packing machine's sensor. Only rice without dust or dirt should go in."
+      },
+      "paddy_count_status": "Bags of Rice -> Clean, Sealed Bags (small quantity rejected)"
+    },
+    {
+      "scene_number": 5,
+      "title": "சமைத்தலும் காத்திருத்தலும் (Washing and Cooking)",
+      "location": "அருணின் நவீன சமையலறை (Arun's modern kitchen).",
+      "action": "அருணின் மனைவி செம்மல் அடங்கிய அரிசியை பாத்திரத்தில் எடுத்து, சமைப்பதற்கு முன் கழுவுகிறார்.",
+      "elimination_event": "அரிசி கழுவும்போது, சில மிதக்கும் அரிசிகள், சிறிய கற்கள் அல்லது உமித் துண்டுகள் தண்ணீருடன் வெளியேற்றப்பட்டு, வடிகாலுக்குச் செல்கின்றன.",
+      "dialogue": {
+        "speaker": "அருணின் மனைவி (Arun's Wife)",
+        "tamil": "அரிசியை நல்லா ரெண்டு வாட்டி கழுவுங்க. மேல மிதக்குறதெல்லாம் வெளிய போகணும். அப்பதான் சோறு வெள்ளையா இருக்கும்.",
+        "english_translation": "Wash the rice thoroughly twice. Everything floating on top must go out. Only then will the cooked rice be white."
+      },
+      "paddy_count_status": "Reduced batch size (floating grains lost down the drain)"
+    },
+    {
+      "scene_number": 6,
+      "title": "பரிமாறி உண்ணுதல் (Serving and Eating)",
+      "location": "அருணின் உணவு மேஜை.",
+      "action": "சமைத்த அரிசி (இப்போது சோறு) அருணின் தட்டில் பரிமாறப்படுகிறது. செம்மல் தட்டின் விளிம்பில் உள்ளது. அருண் சாப்பிடத் தொடங்குகிறான்.",
+      "elimination_event": "பரிமாறலின்போது, சில ஒட்டியிருக்கும் சோறு பானையிலோ அல்லது மேஜையிலோ சிதறுகிறது; சாப்பாட்டின்போது, சில கீழே விழுகின்றன.",
+      "dialogue": {
+        "speaker": "பாட்டி (Grandmother - Optional character, for context)",
+        "tamil": "சாப்பிடும்போது கீழே சிந்தாதேப்பா. ஒரு பருக்கையும் வீணாக்கக் கூடாதுன்னு சொல்லிக் கொடுத்திருக்கேன்.",
+        "english_translation": "Don't spill it while eating, child. I've taught you not to waste a single grain."
+      },
+      "paddy_count_status": "Minimal loss (scattered grains)"
+    },
+    {
+      "scene_number": 7,
+      "title": "வீணாக்குதல் மற்றும் தனியுரை (Wasting and Monologue)",
+      "location": "அருணின் உணவு மேஜை.",
+      "action": "அருண் உணவின் மீது அதிருப்தி அடைந்து, செம்மல் உள்ள தட்டைத் தள்ளிவிடுகிறான். செம்மல் வீணான உணவின் மீது தனியுரை நிகழ்த்துகிறது (Dialogue in the story's main language, which is Tamil).",
+      "elimination_event": "கழுவும்போது, தட்டில் எஞ்சியிருக்கும் செம்மல் உட்பட அனைத்து சோறும் குப்பையில் வீசப்படுகிறது, இது நெல் மணியின் பயணத்தை முடிவுக்குக் கொண்டுவருகிறது.",
+      "dialogue": {
+        "speaker": "அருண் (Arun)",
+        "tamil": "போதும். பசிக்கலை. இன்னைக்கு சோறு சரியில்ல. இதை எடுத்துட்டுப் போங்க. (This is the final complaint.)",
+        "english_translation": "Enough. I'm not hungry. The rice isn't good today. Take this away."
+      },
+      "paddy_count_status": "Final loss (The remaining quantity is discarded)"
+    }
+  ]
+}

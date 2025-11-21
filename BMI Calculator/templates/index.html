@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 4 Challenge - BMI Calculator</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg-start: #667eea;
+        --bg-end: #764ba2;
+        --card-bg: rgba(255, 255, 255, 0.96);
+        --card-shadow: 0 30px 60px rgb(17 0 56 / 25%);
+        --text-main: #1f1c2c;
+        --text-muted: #5c5b6a;
+        --control-border: #d5d4de;
+        --accent-start: #f093fb;
+        --accent-end: #f5576c;
+        --accent-text: #ffffff;
+        --slider-track: #d7d6e2;
+        --underweight: #4facfe;
+        --normal: #43e97b;
+        --overweight: #fa709a;
+        --obese: #f5576c;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 0% 100%, rgb(255 255 255 / 15%), transparent 40%),
+          radial-gradient(circle at 100% 0%, rgb(255 255 255 / 20%), transparent 45%),
+          linear-gradient(135deg, var(--bg-start), var(--bg-end));
+        color: var(--text-main);
+        padding: 24px;
+      }
+
+      .card {
+        width: min(480px, 100%);
+        background: var(--card-bg);
+        border-radius: 28px;
+        padding: 36px;
+        box-shadow: var(--card-shadow);
+        backdrop-filter: blur(20px);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.9rem;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        margin: 0 0 32px;
+        font-size: 0.95rem;
+      }
+
+      form {
+        display: grid;
+        gap: 24px;
+      }
+
+      .input-group {
+        display: grid;
+        gap: 12px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.95rem;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-wrapper input {
+        width: 100%;
+        padding: 16px 50px 16px 20px;
+        border-radius: 18px;
+        border: 1px solid var(--control-border);
+        font-size: 1rem;
+        background: rgb(255 255 255 / 90%);
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+        box-sizing: border-box;
+      }
+
+      .input-wrapper input::placeholder {
+        color: #b5b3c2;
+      }
+
+      .input-wrapper input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 12px 30px rgb(102 126 234 / 30%);
+      }
+
+      .unit {
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+
+      .primary-button {
+        padding: 15px 20px;
+        border: none;
+        border-radius: 18px;
+        background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+        color: var(--accent-text);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .primary-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 35px rgb(245 87 108 / 45%);
+      }
+
+      .result {
+        text-align: center;
+        display: grid;
+        gap: 20px;
+      }
+
+      .result-emoji {
+        font-size: 3rem;
+        margin-bottom: -10px;
+      }
+
+      .bmi-value {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin: 10px 0;
+        background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .bmi-category {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 8px 0;
+      }
+
+      .category-underweight {
+        background: rgb(79 172 254 / 15%);
+        color: var(--underweight);
+      }
+
+      .category-normal {
+        background: rgb(67 233 123 / 15%);
+        color: var(--normal);
+      }
+
+      .category-overweight {
+        background: rgb(250 112 154 / 15%);
+        color: var(--overweight);
+      }
+
+      .category-obese {
+        background: rgb(245 87 108 / 15%);
+        color: var(--obese);
+      }
+
+      .result-info {
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 8px 0;
+      }
+
+      .again-button {
+        justify-self: center;
+        padding: 14px 28px;
+        border-radius: 16px;
+        border: none;
+        background: #f0edff;
+        color: #667eea;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+        margin-top: 8px;
+      }
+
+      .again-button:hover {
+        background: #dcd4ff;
+        transform: translateY(-1px);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      {% if bmi_value %}
+        <section class="result" aria-live="polite">
+          <div class="result-emoji">🏋️</div>
+          <div class="bmi-value">{{ bmi_value }}</div>
+          <div>
+            <span class="bmi-category category-{{ bmi_category|lower }}">{{ bmi_category }}</span>
+          </div>
+          <p class="result-info">
+            Height: {{ height }} cm<br>
+            Weight: {{ weight }} kg
+          </p>
+          <form method="get">
+            <button class="again-button" type="submit">Calculate Again</button>
+          </form>
+        </section>
+      {% else %}
+        <h1>BMI Calculator</h1>
+        <p class="subtitle">Calculate your Body Mass Index</p>
+        <form method="post" novalidate>
+          <div class="input-group">
+            <label for="height">Height (cm)</label>
+            <div class="input-wrapper">
+              <input
+                id="height"
+                name="height"
+                type="number"
+                step="0.1"
+                min="50"
+                max="250"
+                placeholder="Enter height"
+                value="{{ height }}"
+                required
+                autofocus
+              >
+              <span class="unit">cm</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="weight">Weight (kg)</label>
+            <div class="input-wrapper">
+              <input
+                id="weight"
+                name="weight"
+                type="number"
+                step="0.1"
+                min="20"
+                max="300"
+                placeholder="Enter weight"
+                value="{{ weight }}"
+                required
+              >
+              <span class="unit">kg</span>
+            </div>
+          </div>
+
+          <button class="primary-button" type="submit">Calculate BMI</button>
+        </form>
+      {% endif %}
+    </main>
+  </body>
+</html>
+

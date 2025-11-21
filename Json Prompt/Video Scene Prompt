@@ -1,0 +1,79 @@
+{
+  "project_id": "AI_Evo_Cinematic_Veo_Scene",
+  "requester": "VideoDirector_CinematicFlow",
+  "task": "Generate a single, continuous, ultra-high-definition cinematic video scene (optimized for Google Veo) illustrating the evolution of AI from 1900 to November 2025. The scene will be a 'one-shot' camera fly-through of a dynamically growing 3D structure, evolving from a simple seed of light into a vast, complex canopy of interconnected energy. All text should be minimalist, cinematic, and integrated as on-screen graphics (OSG).",
+
+  "concept": {
+    "title": "AI Evolved: A Veo Cinematic",
+    "metaphor": "A time-lapse procedural growth of a 'digital tree' or 'crystalline structure' in a 3D data void. It grows from a single, foundational 'seed of light' (early theory) into a dense, multi-branched 'canopy' (modern AI). Milestones are not just labels, but *events* that cause the structure to grow, branch, or change in real-time.",
+    "core_visual_dynamic": "A continuous camera move (dolly/crane/fly-through) follows the 'tip' of the growth. It starts on a single, glowing 'seed' (1900s). As the camera moves forward and upward, the seed sprouts, growing into a complex, crystalline 'tree' of light. Major milestones are visual *events* on this structure (e.He., a node flashing, a branch splitting, a burst of particles). The camera's single, uninterrupted path *is* the timeline. The scene culminates in an explosive, interconnected 'canopy' representing the 2025 generative AI boom."
+  },
+
+  "style_palette": {
+    "primary_aesthetic": "Cinematic VFX", "High-end 3D procedural animation", "Photorealistic data visualization", "Abstract crystalline growth",
+    "primary_style": "Crystalline structures, glowing energy conduits, volumetric lighting, complex particle systems, subsurface scattering on the 'branches'. High contrast and deep blacks.",
+    "background": "An infinite 'data void' or 'deep space environment' (#05050A). Not pure black, but filled with subtle, out-of-focus data motes or a faint digital grid far in the distance.",
+    "color_coding": {
+      "emissive_core_light": "Subtle silver-grey (#C0C0C0)",
+      "branch_logic_expert_systems": "Deep Azure Blue light (#007FFF)",
+      "branch_nlp_language": "Emerald Green light (#00C853)",
+      "branch_computer_vision": "Vibrant Gold light (#FFD700)",
+      "branch_robotics_agents": "Bright Orange-Red light (#FF4500)",
+      "branch_deep_reinforcement": "Electric Violet light (#BF00FF)",
+      "milestone_event_flash": "Pulsing pure white to soft cyan (#FFFFFF to #00FFFF), creating a lens flare."
+    }
+  },
+
+  "cinematography_and_layout": {
+    "orientation": "Landscape (16:9 cinematic)",
+    "camera_movement": "A single, smooth, continuous 'one-shot' fly-through. Starts bottom-left (macro shot on the 'seed') and follows the main trunk as it grows. The camera path cranes up and pulls back (dolly out) to reveal the increasing scale, culminating in a wide shot of the full, complex 'canopy' at the end (top-right).",
+    "scene_pacing": "Starts slow, contemplative (1900-1970s). Growth visibly slows during the 'AI Winter' (light dims). Pacing accelerates slightly in the 80s/90s. Becomes a *rapid* growth spurt in the 2010s. Culminates in an *explosive*, frantic, multi-branching burst for the 2020-2025 era.",
+    "text_integration": {
+      "style": "Minimalist, cinematic on-screen graphics (OSG).",
+      "font": "Clean, modern, sans-serif (e.g., 'Roboto Light', 'Inter').",
+      "animation": "As the camera passes a key node/event, the text (e.g., '1956: Dartmouth Workshop') elegantly fades in, holds, and fades out near the event location.",
+      "readability": "Text is secondary to the visual event. It should be clear and elegant, but not clutter the cinematic feel. Prioritize the *visual* storytelling."
+    }
+  },
+
+  "key_scene_events_by_era": [
+    {
+      "era": "1900-1940s: Theoretical Foundations",
+      "cinematic_action": "Extreme close-up on a dark void. A single point of light ('1936: Turing Machine') pulses, forming the initial 'seed' structure. [Text: '1936: Turing Machine'] fades in/out."
+    },
+    {
+      "era": "1950s: Birth of AI",
+      "cinematic_action": "Camera pulls back slowly as the seed sprouts its first glowing, crystalline roots. The main trunk forms. 'Dartmouth Workshop' node (1956) flashes brightly, solidifying the trunk's core. [Text: '1956: Dartmouth Workshop (AI Coined)'] fades in/out."
+    },
+    {
+      "era": "1960s-1970s: Early Explorations & Winter",
+      "cinematic_action": "Camera follows new branches (Blue 'Logic', Green 'NLP'). 'ELIZA' node flickers with simple patterns. The 'Lighthill Report' node (1973) pulses a cold, blue light, and the structure's overall growth and brightness visibly dim and slow down."
+    },
+    {
+      "era": "1980s: Expert Systems & Revival",
+      "cinematic_action": "Light and growth resume. The 'Backpropagation' node (1986) appears as a bright, internal 'spark' that ignites new, complex branching patterns, glowing from within the structure."
+    },
+    {
+      "era": "1990s: Milestone Victories",
+      "cinematic_action": "Camera swings around the 'Deep Blue' (1997) node, which flashes and emits a complex, grid-like particle burst. [Text: '1997: Deep Blue Beats Kasparov'] fades in/out."
+    },
+    {
+      "era": "2000s: The Data Revolution",
+      "cinematic_action": "The 'ImageNet' (2009) node *explodes* (like a seed pod), releasing millions of tiny, glowing image-motes. These particles flow up the 'Computer Vision' branch (Gold), causing it to thicken and brighten massively."
+    },
+    {
+      "era": "2010s: Deep Learning Era",
+      "cinematic_action": "Camera *accelerates* to keep up with frantic growth. 'AlexNet' (2012) is a massive surge of light up the Gold branch. 'AlphaGo' (2016) is a new node that sprouts intricate, beautiful, game-board-like crystalline structures. The 'Transformer' (2017) node appears as a critical, central *prism* that refracts the main light into multiple new, powerful branches."
+    },
+    {
+      "era": "2020-2025: Generative AI & Multimodality",
+      "cinematic_action": "The 'Transformer' hub fuels an *explosion*. All branches (NLP, Vision, etc.) grow rapidly and intertwine. 'GPT-3' (2020) is a massive pulse of *text* particles. 'DALL-E 2' (2022) is a pulse of *image* particles. 'ChatGPT' (Nov 2022) is a vast web of light connecting all branches. The camera pulls back to reveal the final, immense, dazzlingly complex 'canopy,' with new branches for 'Video Gen' (2025) still visibly forming and pulsing with energy at the edges."
+    }
+  ],
+
+  "constraints": {
+    "negative_prompt": "Avoid: static camera, 2D infographic look, flat lighting, blurry motion, cartoonish elements, cluttered text, abrupt cuts, non-photorealistic rendering, stock footage.",
+    "output_quality": "4K (3840x2160), 24fps, cinematic motion blur, photorealistic 3D rendering, dynamic particle simulation, volumetric lighting, high dynamic range (HDR).",
+    "scene_duration": "Suggest a target duration of 30-45 seconds to cover the full evolution with appropriate cinematic pacing."
+  }
+}
