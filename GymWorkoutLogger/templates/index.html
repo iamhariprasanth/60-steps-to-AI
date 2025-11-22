@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💪 Gym Workout Logger</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <!-- Background Gym Music -->
+    <audio id="gymMusic" loop>
+        <source src="https://assets.mixkit.co/active_media/previews/3822-view-preview.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <div class="music-controls">
+        <button id="musicToggle" class="music-btn" title="Toggle Music">🔊 Music</button>
+        <input type="range" id="volumeControl" class="volume-slider" min="0" max="100" value="30">
+    </div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">🏋️ 💪 GYM WORKOUT LOGGER 💪 🏋️</h1>
+            <div class="nav-links">
+                <a href="#dashboard" class="nav-link active" onclick="showSection('dashboard')">Dashboard</a>
+                <a href="#logger" class="nav-link" onclick="showSection('logger')">Log Workout</a>
+                <a href="#analytics" class="nav-link" onclick="showSection('analytics')">Analytics</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Motivational Quotes Slider -->
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide fade">
+                <div class="slide-bg" style="background-image: url('https://images.pexels.com/photos/3551028/pexels-photo-3551028.jpeg?auto=compress&cs=tinysrgb&w=1200&h=500&fit=crop');"></div>
+                <div class="slide-overlay">
+                    <p class="motivation-text">"The iron never lies. No matter who you are, how strong you think you are, when you step on that platform, the only truth that matters is whether you can lift the weight."</p>
+                </div>
+            </div>
+            <div class="slide fade">
+                <div class="slide-bg" style="background-image: url('https://images.pexels.com/photos/949126/pexels-photo-949126.jpeg?auto=compress&cs=tinysrgb&w=1200&h=500&fit=crop');"></div>
+                <div class="slide-overlay">
+                    <p class="motivation-text">"Success is not final, failure is not fatal: it is the courage to continue that counts. Keep lifting!"</p>
+                </div>
+            </div>
+            <div class="slide fade">
+                <div class="slide-bg" style="background-image: url('https://images.pexels.com/photos/3621807/pexels-photo-3621807.jpeg?auto=compress&cs=tinysrgb&w=1200&h=500&fit=crop');"></div>
+                <div class="slide-overlay">
+                    <p class="motivation-text">"Your body can stand almost anything. It's your mind that you need to convince."</p>
+                </div>
+            </div>
+            <div class="slide fade">
+                <div class="slide-bg" style="background-image: url('https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=1200&h=500&fit=crop');"></div>
+                <div class="slide-overlay">
+                    <p class="motivation-text">"Don't wish for it. Work for it! Every rep brings you closer to your goals."</p>
+                </div>
+            </div>
+            <div class="slide fade">
+                <div class="slide-bg" style="background-image: url('https://images.pexels.com/photos/2204196/pexels-photo-2204196.jpeg?auto=compress&cs=tinysrgb&w=1200&h=500&fit=crop');"></div>
+                <div class="slide-overlay">
+                    <p class="motivation-text">"The pain you feel today will be the strength you feel tomorrow."</p>
+                </div>
+            </div>
+            
+            <a class="prev" onclick="changeSlide(-1)">❮</a>
+            <a class="next" onclick="changeSlide(1)">❯</a>
+        </div>
+        <div class="dots-container">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+            <span class="dot" onclick="currentSlide(5)"></span>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="section active">
+        <div class="container">
+            <h2 class="section-title">📊 Workout Dashboard</h2>
+            
+            <!-- Weekly Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Workouts</h3>
+                    <p class="stat-value" id="total-workouts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>This Week</h3>
+                    <p class="stat-value" id="week-workouts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Weight Lifted</h3>
+                    <p class="stat-value" id="total-weight">0 kg</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Favorite Exercise</h3>
+                    <p class="stat-value" id="fav-exercise">N/A</p>
+                </div>
+            </div>
+
+            <!-- Weekly Progress Graph -->
+            <div class="chart-container">
+                <h3>Weekly Progress</h3>
+                <canvas id="weeklyChart"></canvas>
+            </div>
+
+            <!-- Recent Workouts Table -->
+            <div class="table-container">
+                <h3>Recent Workouts</h3>
+                <table id="workouts-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Exercise</th>
+                            <th>Sets</th>
+                            <th>Reps</th>
+                            <th>Weight (kg)</th>
+                            <th>Notes</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workouts-tbody">
+                        <tr>
+                            <td colspan="7" class="empty-message">No workouts logged yet. Start by logging your first workout!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logger Section -->
+    <section id="logger" class="section">
+        <div class="container">
+            <h2 class="section-title">🏋️ Log Your Workout</h2>
+            
+            <form id="workout-form" class="workout-form">
+                <div class="form-group">
+                    <label for="exercise">Exercise *</label>
+                    <select id="exercise" name="exercise" required>
+                        <option value="">Select Exercise</option>
+                        <option value="Bench Press">Bench Press</option>
+                        <option value="Squats">Squats</option>
+                        <option value="Deadlifts">Deadlifts</option>
+                        <option value="Pull-ups">Pull-ups</option>
+                        <option value="Barbell Rows">Barbell Rows</option>
+                        <option value="Leg Press">Leg Press</option>
+                        <option value="Dumbbell Curls">Dumbbell Curls</option>
+                        <option value="Tricep Dips">Tricep Dips</option>
+                        <option value="Shoulder Press">Shoulder Press</option>
+                        <option value="Lat Pulldown">Lat Pulldown</option>
+                        <option value="Leg Curls">Leg Curls</option>
+                        <option value="Cable Rows">Cable Rows</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sets">Sets *</label>
+                        <input type="number" id="sets" name="sets" min="1" max="10" required placeholder="e.g., 4">
+                    </div>
+                    <div class="form-group">
+                        <label for="reps">Reps *</label>
+                        <input type="number" id="reps" name="reps" min="1" max="50" required placeholder="e.g., 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg) *</label>
+                        <input type="number" id="weight" name="weight" min="0" step="0.5" required placeholder="e.g., 100">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" placeholder="Add any notes about your workout..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">💾 Log Workout</button>
+            </form>
+
+            <div id="form-message" class="message"></div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section id="analytics" class="section">
+        <div class="container">
+            <h2 class="section-title">📈 Analytics & Trends</h2>
+            
+            <div class="charts-grid">
+                <!-- Pivot Table for Trends -->
+                <div class="chart-container full-width">
+                    <h3>📊 Workout Trends - Pivot Table</h3>
+                    <div class="table-wrapper">
+                        <table id="trendTable" class="trend-pivot-table">
+                            <thead>
+                                <tr>
+                                    <th>Exercise</th>
+                                    <th>Latest Weight (kg)</th>
+                                    <th>Max Weight (kg)</th>
+                                    <th>Avg Weight (kg)</th>
+                                    <th>Total Reps</th>
+                                    <th>Times Done</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trendTableBody">
+                                <tr>
+                                    <td colspan="7" class="empty-message">No workout data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Donut Chart for Exercise Distribution -->
+                <div class="chart-container">
+                    <h3>Exercise Distribution</h3>
+                    <canvas id="donutChart"></canvas>
+                </div>
+
+                <!-- Total Reps Chart -->
+                <div class="chart-container">
+                    <h3>Total Reps by Exercise</h3>
+                    <canvas id="repsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
