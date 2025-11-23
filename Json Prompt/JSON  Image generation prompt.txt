@@ -21,7 +21,7 @@ Result:
   "task": "Design a single, ultra-high-definition infographic image illustrating the evolution of Artificial Intelligence from 1900 to November 2025. All key event labels and dates must be clearly visible and legible to a common viewer without needing to zoom excessively.",
   
   "concept": {
-    "title": "The Ascent of Minds: A Visual History of AI",
+    "title": "A Visual History of AI by Hariprasanth Madhavan",
     "metaphor": "A dynamic, upward-flowing 'evolutionary tree' or 'digital vine' that grows from a foundational root (early theory) into a dense, multi-branched canopy (modern AI). Each branch represents a core AI domain, and luminous 'fruits' or 'blossoms' on these branches are major milestones.",
     "core_visual_dynamic": "The base (left-bottom) begins with a single, abstract 'seed' or 'root' of theoretical computing. As it ascends diagonally upwards and to the right, it develops into a robust trunk. Around the 1950s, the first major branches (Logic/Expert Systems, NLP, Computer Vision) emerge. These branches thicken, intertwine, and grow more complex. Key events are represented by distinctly glowing, labeled nodes/fruits on their respective branches. The top-right (2025) explodes into a vibrant, interconnected 'canopy' with multiple glowing generative AI entities, symbolizing the current multimodal explosion. The overall flow should feel organic yet precisely structured."
   },

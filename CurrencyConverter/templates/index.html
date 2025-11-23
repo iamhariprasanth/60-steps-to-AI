@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💱 Currency Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="title">💱 Currency Converter</h1>
+            <p class="subtitle">Convert between INR, USD, EUR, and GBP instantly</p>
+        </header>
+
+        <div class="converter-card">
+            <!-- From Currency Section -->
+            <div class="currency-section">
+                <label for="from-currency" class="label">From</label>
+                <div class="input-group">
+                    <select id="from-currency" class="currency-select">
+                        <option value="INR" selected>🇮🇳 INR - Indian Rupee</option>
+                        <option value="USD">🇺🇸 USD - US Dollar</option>
+                        <option value="EUR">🇪🇺 EUR - Euro</option>
+                        <option value="GBP">🇬🇧 GBP - British Pound</option>
+                    </select>
+                    <input type="number" id="from-amount" class="amount-input" placeholder="0.00" value="100" min="0" step="0.01">
+                </div>
+                <div class="currency-display" id="from-display">₹ 100.00</div>
+            </div>
+
+            <!-- Swap Button -->
+            <div class="swap-section">
+                <button id="swap-btn" class="swap-btn" title="Swap currencies">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 16V4M7 4L3 8M7 4L11 8"></path>
+                        <path d="M17 8V20M17 20L21 16M17 20L13 16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- To Currency Section -->
+            <div class="currency-section">
+                <label for="to-currency" class="label">To</label>
+                <div class="input-group">
+                    <select id="to-currency" class="currency-select">
+                        <option value="INR">🇮🇳 INR - Indian Rupee</option>
+                        <option value="USD" selected>🇺🇸 USD - US Dollar</option>
+                        <option value="EUR">🇪🇺 EUR - Euro</option>
+                        <option value="GBP">🇬🇧 GBP - British Pound</option>
+                    </select>
+                    <input type="number" id="to-amount" class="amount-input" placeholder="0.00" readonly>
+                </div>
+                <div class="currency-display" id="to-display">$ 0.00</div>
+            </div>
+
+            <!-- Exchange Rate Info -->
+            <div class="rate-info" id="rate-info">
+                <div class="rate-text">1 INR = 0.012 USD</div>
+                <div class="rate-subtext">Rates are approximate and for reference only</div>
+            </div>
+        </div>
+
+        <!-- Quick Conversion Table -->
+        <div class="quick-convert-card">
+            <h2 class="card-title">📊 Quick Conversion Reference</h2>
+            <div class="conversion-grid" id="conversion-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Exchange Rates Table -->
+        <div class="rates-card">
+            <h2 class="card-title">💹 Current Exchange Rates</h2>
+            <table class="rates-table">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th>Symbol</th>
+                        <th>Rate (to INR)</th>
+                        <th>Rate (from INR)</th>
+                    </tr>
+                </thead>
+                <tbody id="rates-tbody">
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
