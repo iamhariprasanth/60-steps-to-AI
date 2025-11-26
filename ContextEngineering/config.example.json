@@ -1,0 +1,13 @@
+{
+  "api_key": "YOUR_API_KEY",
+  "model": "gpt-4o",
+  "max_tokens": 4096,
+  "temperature": 0.7,
+  "context_window": {
+    "gpt-4o": 4096,
+    "gpt-4o-16k": 16384,
+    "gpt-4o-8k": 8192,
+    "gpt-4o-32k": 32768,
+    "gpt-4o-40": 128000
+  }
+}
