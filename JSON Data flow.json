@@ -1,0 +1,107 @@
+{
+  "name": "JSON Data flow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        0
+      ],
+      "id": "b01f5f62-73c9-488d-a0b3-4ea71aeab76c",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"customers\": [\n    {\n      \"id\": \"CUST-1001\",\n      \"firstName\": \"Emily\",\n      \"lastName\": \"Johnson\",\n      \"email\": \"emily.johnson@example.com\",\n      \"phone\": \"+1-555-201-7834\",\n      \"city\": \"New York\",\n      \"country\": \"USA\",\n      \"status\": \"active\",\n      \"createdAt\": \"{{ $now }}\"\n    },\n    {\n      \"id\": \"CUST-1002\",\n      \"firstName\": \"Liam\",\n      \"lastName\": \"Martinez\",\n      \"email\": \"liam.martinez@example.com\",\n      \"phone\": \"+44-722-551-9812\",\n      \"city\": \"London\",\n      \"country\": \"UK\",\n      \"status\": \"active\",\n      \"createdAt\": \"{{ new Date().toISOString() }}\"\n    },\n    {\n      \"id\": \"CUST-1003\",\n      \"firstName\": \"Sophia\",\n      \"lastName\": \"Chen\",\n      \"email\": \"sophia.chen@example.com\",\n      \"phone\": \"+61-430-884-290\",\n      \"city\": \"Sydney\",\n      \"country\": \"Australia\",\n      \"status\": \"inactive\",\n      \"createdAt\": \"{{ $now }}\"\n    },\n    {\n      \"id\": \"CUST-1004\",\n      \"firstName\": \"James\",\n      \"lastName\": \"O'Connor\",\n      \"email\": \"james.oconnor@example.com\",\n      \"phone\": \"+353-87-212-4489\",\n      \"city\": \"Dublin\",\n      \"country\": \"Ireland\",\n      \"status\": \"active\",\n      \"createdAt\": \"{{ new Date().toISOString() }}\"\n    },\n    {\n      \"id\": \"CUST-1005\",\n      \"firstName\": \"Ava\",\n      \"lastName\": \"Singh\",\n      \"email\": \"ava.singh@example.com\",\n      \"phone\": \"+91-993-237-0012\",\n      \"city\": \"Mumbai\",\n      \"country\": \"India\",\n      \"status\": \"pending\",\n      \"createdAt\": \"{{ $now }}\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "96b3f780-4d1a-4276-b123-35c7625a366e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {
+          "fileName": "demofilen8n"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "a93251d4-b6eb-42db-b462-d89f5b91fc74",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        0
+      ],
+      "id": "2022ac7e-2b14-49fb-9037-d4f43b629bb7",
+      "name": "Extract from File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "34dfddfa-c3fa-4fcf-b8fd-062243207e92",
+  "meta": {
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "vrtAKKmMfhVA5RCf",
+  "tags": []
+}

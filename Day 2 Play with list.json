@@ -1,0 +1,235 @@
+{
+  "name": "Day 2 Play with list",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        -16
+      ],
+      "id": "53667a59-2c7b-4945-bd78-a0ed0de4689d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc59f8b2-8edc-4727-a221-d50ae353d2b0",
+              "name": "Customers",
+              "value": "[\n  {\n    \"customer_id\": \"CUST-1006\",\n    \"name\": \"Fiona Green\",\n    \"email\": \"fiona@marketing.com\",\n    \"phone\": \"5555555555\",\n    \"is_active\": true,\n    \"registration_date\": \"2024-12-01T09:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1007\",\n    \"name\": \"George Harris\",\n    \"email\": \"george.harris@sales.co.uk\",\n    \"phone\": \"555-789-0123\",\n    \"is_active\": false,\n    \"registration_date\": \"2023-08-20T17:15:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1008\",\n    \"name\": \"Too long name for database field limit validation\",\n    \"email\": \"longname@limit.com\",\n    \"phone\": \"555-101-2020\",\n    \"is_active\": true,\n    \"registration_date\": \"2024-03-10T09:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1009\",\n    \"name\": \"Hannah Lee\",\n    \"email\": \"hannah.lee@valid.net\",\n    \"phone\": \"123\",\n    \"is_active\": true,\n    \"registration_date\": \"2023-01-01T00:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1010\",\n    \"name\": \"Ivan Petrov\",\n    \"email\": \"ivan@no-tld\",\n    \"phone\": \"555-303-4040\",\n    \"is_active\": true,\n    \"registration_date\": \"2024-06-15\"\n  },\n  {\n    \"customer_id\": \"CUST-1011\",\n    \"name\": \"Jane Kim\",\n    \"email\": \"jane.kim@partner.org\",\n    \"phone\": \"\",\n    \"is_active\": true,\n    \"registration_date\": \"2024-11-25T11:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1012\",\n    \"name\": \"Kyle Wu\",\n    \"email\": \"kyle.wu@test.io\",\n    \"phone\": \"555-505-6060\",\n    \"is_active\": \"Yes\",\n    \"registration_date\": \"2024-04-05T12:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1013\",\n    \"name\": \"Linda Chen\",\n    \"email\": \"linda.chen@example.com\",\n    \"phone\": \"555-707-8080\",\n    \"is_active\": false,\n    \"registration_date\": \"2023-09-18T13:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1014\",\n    \"name\": \"Mark Miller\",\n    \"email\": \"mark.miller@email.co\",\n    \"phone\": \"555-909-0909\",\n    \"is_active\": true,\n    \"registration_date\": \"2024-07-22T14:00:00Z\"\n  },\n  {\n    \"customer_id\": \"CUST-1015\",\n    \"name\": \"Nancy White\",\n    \"email\": \"nancy.white@valid.biz\",\n    \"phone\": \"555-111-3333\",\n    \"is_active\": true,\n    \"registration_date\": \"2024-10-10T15:00:00Z\"\n  }\n]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -528,
+        -16
+      ],
+      "id": "76be1e63-8329-4211-930d-8977197a7863",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all incoming items\nconst items = $input.all();\n\n// Prepare output container\nlet out = [];\n\n// Loop through input items\nfor (const item of items) {\n  \n  // Extract Customers array\n  const customers = item.json.Customers || [];\n\n  // Loop through each customer\n  for (const customer of customers) {\n    out.push({ json: customer });\n  }\n}\n\n// Return individual customer items\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        -16
+      ],
+      "id": "cd4cf554-60f8-4413-ab4b-c046d4828416",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        -16
+      ],
+      "id": "91aeaa22-067c-4b29-84ee-87cbe9a32817",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "08103a3a-5a87-4012-9172-4cb493eff701",
+              "leftValue": "={{ $json.is_active }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        80
+      ],
+      "id": "090d88fe-6604-44fb-b839-fca017684e50",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4678c1ba-e703-45c9-bb2a-2b33aba61535",
+              "name": "Active",
+              "value": "=Hi {{ $json.name }} you are acitve premium customer in our shop. Thankyou !!!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -16
+      ],
+      "id": "77736ec0-d437-44b2-857a-dbbb6cef997d",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4678c1ba-e703-45c9-bb2a-2b33aba61535",
+              "name": "Active",
+              "value": "=Hi {{ $json.name }} youraccount is not active wit us.",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        160
+      ],
+      "id": "e6032ef3-c03e-4de4-a2e3-8355046c2122",
+      "name": "Edit Fields2",
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1558b889-6ff1-4f02-9435-5f0ad58d9fc6",
+  "meta": {
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "9TvD46YOrJlDZ5hu",
+  "tags": []
+}

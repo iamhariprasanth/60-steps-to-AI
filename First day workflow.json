@@ -1,0 +1,74 @@
+{
+  "name": "First day workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## I'm a Hariprasanth\n[ My First N8N Workflow]\n**Add a Node** ",
+        "height": 112,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        192,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "dd5c363a-6052-4621-b7a6-96a1466221af",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -16
+      ],
+      "id": "77cb9d46-23e5-400f-bc64-8f005814fcfb",
+      "name": "First Manual trigger renamed",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "##Shotcuts in Mac\n1. Cmd + C - Copy\n2. Cmd + S - Save\n3. Cmd+ o - open file\n4. Cmd+ Space - Rename\n5. ctrl + drag - move nodes\n6. ctrl+K - Cmd box\n7. cmd +A - Select All nodes\n8. ctrl+Z - Undo\n9. Ctrl+Shift+Up - Insert sticky\n10. 1 - Focus\n11. Ctrl and + -> ZOOM IN\n12. Ctrl and - -> ZOOM OUT\n13. CTRL and 0 - Reset Zoom\n",
+        "height": 336,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "9229b786-2c82-4ac5-b5ef-e602b910338f",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {
+    "First Manual trigger renamed": [
+      {
+        "json": {
+          "name": "First item",
+          "code": 1
+        }
+      },
+      {
+        "json": {
+          "name": "Second item",
+          "code": 2
+        }
+      }
+    ]
+  },
+  "connections": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d8220513-8f30-4817-a401-9060458d614d",
+  "meta": {
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "nvujCPKcf2cndvdq",
+  "tags": []
+}
