@@ -1,0 +1,427 @@
+{
+  "name": "Slack and Gmail Integrations",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            },
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        384
+      ],
+      "id": "d13ada0a-9eac-49cf-82a1-3c55d1b0a0fa",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6UqWbbqttebdCgrp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get Gmail data safely\nconst email = $input.first().json;\nconst subject = (email.subject || email.snippet || '').toLowerCase();\nconst body = (email.snippet || email.payload?.body?.data || '').toLowerCase();\nconst text = `${subject} ${body}`;\n\n// Define keyword groups by category\nconst categories = {\n  support: [\n    'help', 'issue', 'problem', 'error', 'not working', 'not available',\n    'no data', 'no page', 'no product', 'broken', 'failed', 'cannot', \"can't\",\n    'stuck', 'missing', 'unavailable', 'slow', 'bug', 'fix', 'support'\n  ],\n  billing: [\n    'invoice', 'payment', 'refund', 'charge', 'billing', 'amount', 'credit', 'debit'\n  ],\n  account: [\n    'login', 'password', 'reset', 'access', 'locked', 'signup', 'verify', 'account'\n  ],\n  feedback: [\n    'suggestion', 'feedback', 'improvement', 'review', 'feature request'\n  ]\n};\n\n// Default values\nlet hasKeyword = false;\nlet category = 'General';\n\n// Loop through category sets\nfor (const [cat, words] of Object.entries(categories)) {\n  if (words.some(word => text.includes(word))) {\n    hasKeyword = true;\n    category = cat.charAt(0).toUpperCase() + cat.slice(1); // Capitalize category\n    break;\n  }\n}\n\n// Return structured result\nreturn [{\n  json: {\n    from: email.from || '',\n    subject: email.subject || '',\n    snippet: email.snippet || '',\n    hasKeyword,\n    category,       // 👈 New column/field added\n    messagePreview: text.substring(0, 250)\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        384
+      ],
+      "id": "e46724a7-aed4-4a33-b2c1-3b301c15ffb6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "General",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cbb15702-83b2-4563-847b-4048edab2c37"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "General"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "68d34f0d-14f0-4e4d-bce8-9df28d3c5b17",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Support Needed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ee467851-b44d-45e8-806c-773dcb7e0912",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Billing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Billing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c5eb8c0f-619f-4f77-b4d3-176cdcfa4fa8",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Account",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Account"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c5122e41-a867-4b42-95b8-d07511557ace",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "Feedback",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Feedbacks"
+            }
+          ]
+        },
+        "options": {
+          "allMatchingOutputs": false
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -208,
+        336
+      ],
+      "id": "d14898c1-fc97-4cfe-8762-7b4d7f4f5e10",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A2SMA96F2",
+          "mode": "list",
+          "cachedResultName": "general-ai"
+        },
+        "text": "=Hi Team, \n✉️ *New Email Received!*\n*From:* {{ $('Gmail Trigger').item.json.From }}\n*Subject:*  {{ $('Gmail Trigger').item.json.Subject }}\n*Date:* {{ $now }}\n*Body:*{{ $json.messagePreview }}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -80,
+        96
+      ],
+      "id": "ff58121e-1df4-4a14-8298-80c52d145480",
+      "name": "General",
+      "webhookId": "85040cac-7bd2-4dca-9e5f-e17488adb621",
+      "credentials": {
+        "slackApi": {
+          "id": "WbloBs5YQtJvkSxu",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A2B9SS4E5",
+          "mode": "list",
+          "cachedResultName": "support"
+        },
+        "text": "=Hi Team, \n✉️ *New Email Received!*\n*From:* {{ $('Gmail Trigger').item.json.From }}\n*Subject:*  {{ $('Gmail Trigger').item.json.Subject }}\n*Date:* {{ $now }}\n*Body:*{{ $json.messagePreview }}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        128
+      ],
+      "id": "d13bb8ef-0980-491d-9686-6a9be7203520",
+      "name": "Support",
+      "webhookId": "85040cac-7bd2-4dca-9e5f-e17488adb621",
+      "credentials": {
+        "slackApi": {
+          "id": "WbloBs5YQtJvkSxu",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A21V7SRGU",
+          "mode": "list",
+          "cachedResultName": "billing"
+        },
+        "text": "=Hi Team, \n✉️ *New Email Received!*\n*From:* {{ $('Gmail Trigger').item.json.From }}\n*Subject:*  {{ $('Gmail Trigger').item.json.Subject }}\n*Date:* {{ $now }}\n*Body:*{{ $json.messagePreview }}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        272,
+        304
+      ],
+      "id": "0d54eb23-4c09-4509-8fe2-4b8012b0cde7",
+      "name": "Billing",
+      "webhookId": "85040cac-7bd2-4dca-9e5f-e17488adb621",
+      "credentials": {
+        "slackApi": {
+          "id": "WbloBs5YQtJvkSxu",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A21V90B9S",
+          "mode": "list",
+          "cachedResultName": "account"
+        },
+        "text": "=Hi Team, \n✉️ *New Email Received!*\n*From:* {{ $('Gmail Trigger').item.json.From }}\n*Subject:*  {{ $('Gmail Trigger').item.json.Subject }}\n*Date:* {{ $now }}\n*Body:*{{ $json.messagePreview }}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        384,
+        448
+      ],
+      "id": "cb974594-d089-4bf3-a537-f90540c99198",
+      "name": "Account",
+      "webhookId": "85040cac-7bd2-4dca-9e5f-e17488adb621",
+      "credentials": {
+        "slackApi": {
+          "id": "WbloBs5YQtJvkSxu",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A2SMCPP7A",
+          "mode": "list",
+          "cachedResultName": "feedback"
+        },
+        "text": "=Hi Team, \n✉️ *New Email Received!*\n*From:* {{ $('Gmail Trigger').item.json.From }}\n*Subject:*  {{ $('Gmail Trigger').item.json.Subject }}\n*Date:* {{ $now }}\n*Body:*{{ $json.messagePreview }}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        112,
+        544
+      ],
+      "id": "4c07338a-fdcd-497b-a8b1-6b3c82016b97",
+      "name": "Feedbacks",
+      "webhookId": "85040cac-7bd2-4dca-9e5f-e17488adb621",
+      "credentials": {
+        "slackApi": {
+          "id": "WbloBs5YQtJvkSxu",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "##Slack Task 2\nSupport Request Notifications When a customer submits a support request, n8n should automatically capture the details from the incoming email and send a notification to the designated Slack #support channel.",
+        "height": 240
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "e4395bf4-a73e-467d-9455-338d47b0170d",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "General",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Support",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Billing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Account",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Feedbacks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bb6f93a4-e159-4ee0-bf9e-e0402e58992c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "NiwIpPfrFYKkY0Iy",
+  "tags": []
+}

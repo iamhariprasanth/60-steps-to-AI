@@ -1,0 +1,310 @@
+{
+  "name": "Send Formated Customer Emails",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bb951fd0-df9e-4aa0-983b-3c272a7d17b7",
+                    "leftValue": "={{ $json.EventType }}",
+                    "rightValue": "Anniversary",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Anniversary"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1ccb5662-8e3a-48f3-b775-d4113634b0fb",
+                    "leftValue": "={{ $json.EventType }}",
+                    "rightValue": "Birthday",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Birthday"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "635823f3-dac7-431f-86b8-6a339ae90f4a",
+                    "leftValue": "={{ $json.EventType }}",
+                    "rightValue": "NoEvent",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -304,
+        208
+      ],
+      "id": "97e2322c-f6c0-41fa-9a90-40f9dfed4d73",
+      "name": "Switch",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "sendTo": "iamhariprasanth.ai@gmail.com",
+        "subject": "= Haapy Birthday {{ $json.Name }},",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Happy Birthday</title>\n  <style>\n    body {\n      font-family: 'Poppins', sans-serif;\n      background-color: #fff9f5;\n      margin: 0;\n      padding: 0;\n    }\n    .container {\n      max-width: 600px;\n      margin: 30px auto;\n      background: #ffffff;\n      border-radius: 12px;\n      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);\n      overflow: hidden;\n    }\n    .header {\n      background: linear-gradient(90deg, #ff8a00, #ff3c8a);\n      color: white;\n      text-align: center;\n      padding: 30px 20px;\n    }\n    .header h1 {\n      margin: 0;\n      font-size: 32px;\n      letter-spacing: 1px;\n    }\n    .body {\n      padding: 25px;\n      color: #333;\n      text-align: center;\n      line-height: 1.8;\n    }\n    .body p {\n      font-size: 18px;\n    }\n    .footer {\n      background-color: #ff8a00;\n      color: white;\n      text-align: center;\n      padding: 15px;\n      font-size: 14px;\n    }\n    .balloon {\n      font-size: 40px;\n      animation: float 2s ease-in-out infinite;\n    }\n    @keyframes float {\n      0%, 100% { transform: translateY(0); }\n      50% { transform: translateY(-10px); }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🎉 Happy Birthday! 🎉</h1>\n    </div>\n    <div class=\"body\">\n      <p>Dear {{ $json.Name }} ,</p>\n<p style=\"text-align:center;\">\n  <img src=\"https://images.unsplash.com/photo-1577998474517-7eeeed4e448a?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Happy Birthday\" width=\"450\" style=\"border-radius:8px; margin-top:10px;\"/>\n      <p>Wishing you a day filled with laughter, joy, and all your favorite things! 🎂</p>\n      <p>May your year ahead sparkle with happiness and success.</p>\n      <p class=\"balloon\">🎈🎈🎈</p>\n      <p>Have an amazing birthday!<br><strong>🎁 From Hariprasanth Madhavan 🎁</strong></p>\n    </div>\n    <div class=\"footer\">\n      Sending Birthday Smiles Your Way 🥳\n    </div>\n  </div>\n</body>\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "0c91b037-10de-4cc7-a80c-f438e3fbd060",
+      "name": "Happy Birthday ",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        224
+      ],
+      "webhookId": "5d5b5023-9125-4e11-9b35-87bb88630c4f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6UqWbbqttebdCgrp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "iamhariprasanth.ai@gmail.com",
+        "subject": "=Happy Anniversary {{ $json.Name }},  ",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Happy Anniversary</title>\n  <style>\n    body {\n      font-family: 'Poppins', sans-serif;\n      background-color: #fff8f0;\n      margin: 0;\n      padding: 0;\n    }\n    .container {\n      max-width: 600px;\n      margin: 30px auto;\n      background: #ffffff;\n      border-radius: 12px;\n      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);\n      overflow: hidden;\n    }\n    .header {\n      background: linear-gradient(90deg, #ff6f61, #ff9472);\n      color: white;\n      text-align: center;\n      padding: 30px 20px;\n    }\n    .header h1 {\n      margin: 0;\n      font-size: 32px;\n      letter-spacing: 1px;\n    }\n    .body {\n      padding: 25px;\n      color: #333;\n      text-align: center;\n      line-height: 1.8;\n    }\n    .body p {\n      font-size: 18px;\n    }\n    .footer {\n      background-color: #ff6f61;\n      color: white;\n      text-align: center;\n      padding: 15px;\n      font-size: 14px;\n    }\n    .heart {\n      font-size: 30px;\n      color: #ff6f61;\n      animation: pulse 1.2s infinite;\n    }\n    @keyframes pulse {\n      0%, 100% { transform: scale(1); }\n      50% { transform: scale(1.2); }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>💖 Happy Anniversary! 💖</h1>\n    </div>\n    <div class=\"body\">\n      <p>Dear <b> {{ $json.Name }} </b>, </p>\n<p style=\"text-align:center;\">\n  <img src=\"https://images.unsplash.com/photo-1707831853477-545a84511e57?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Happy Birthday\" width=\"450\" style=\"border-radius:8px; margin-top:10px;\"/>\n</p>\n      <p>Today marks another beautiful milestone in your journey together. 💑</p>\n      <p>May your love continue to bloom and bring endless happiness for years to come!</p>\n      <p class=\"heart\">❤️❤️❤️</p>\n      <p>With warm wishes,<br><strong>Your </br> <i> Hariprasanth Madhavan </i> </strong></p>\n    </div>\n    <div class=\"footer\">\n      Celebrating Love & Togetherness ✨\n    </div>\n  </div>\n</body>\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "a5a5c220-7bab-4f46-8093-8034940a9286",
+      "name": "Happy Anniverasry",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        32
+      ],
+      "webhookId": "5d5b5023-9125-4e11-9b35-87bb88630c4f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6UqWbbqttebdCgrp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Oha11hx9geS-1WbMZPVeqdr2GYCII6NxV2QgRkzfc-Y",
+          "mode": "list",
+          "cachedResultName": "n8n customers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Oha11hx9geS-1WbMZPVeqdr2GYCII6NxV2QgRkzfc-Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "customers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Oha11hx9geS-1WbMZPVeqdr2GYCII6NxV2QgRkzfc-Y/edit#gid=0"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -752,
+        224
+      ],
+      "id": "cfc779e2-d169-4430-86d6-bca60a7c1edd",
+      "name": "Get customer data from Google Sheet",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wrK2u6QIuRk4RbTb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get today's month and day\nconst today = new Date();\nconst todayMonth = today.getMonth() + 1; // Months start at 0\nconst todayDay = today.getDate();\n\nreturn items.map(item => {\n  const data = item.json;\n  const dob = data[\"Date of Birth\"];\n  const anniv = data[\"Anniversary\"];\n  let eventType = \"NoEvent\";\n\n  // Helper: safely extract month-day from a date string\n  const parseDate = (value) => {\n    if (!value) return null;\n    const d = new Date(value);\n    if (isNaN(d)) {\n      // Try to parse Google Sheets-style MM/DD/YYYY\n      const parts = value.split(/[\\/\\-]/);\n      if (parts.length === 3) {\n        const month = parseInt(parts[0]);\n        const day = parseInt(parts[1]);\n        return { month, day };\n      }\n      return null;\n    }\n    return { month: d.getMonth() + 1, day: d.getDate() };\n  };\n\n  // Check Date of Birth\n  const dobParsed = parseDate(dob);\n  if (dobParsed && dobParsed.month === todayMonth && dobParsed.day === todayDay) {\n    eventType = \"Birthday\";\n  }\n\n  // Check Anniversary\n  const annivParsed = parseDate(anniv);\n  if (annivParsed && annivParsed.month === todayMonth && annivParsed.day === todayDay) {\n    eventType = \"Anniversary\";\n  }\n\n  // Add result\n  data.EventType = eventType;\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -528,
+        224
+      ],
+      "id": "dbe5f1d2-7072-4898-a988-5a944d11188e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "iamhariprasanth.ai@gmail.com",
+        "subject": "=You got 30% offer {{ $json.Name }},",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Exclusive 30% OFF Offer Just for You!</title>\n  <style>\n    body {\n      font-family: 'Poppins', sans-serif;\n      background-color: #f9f9f9;\n      margin: 0;\n      padding: 0;\n    }\n    .container {\n      max-width: 600px;\n      margin: 30px auto;\n      background: #ffffff;\n      border-radius: 12px;\n      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);\n      overflow: hidden;\n    }\n    .header {\n      background: linear-gradient(90deg, #ff7b00, #ff006e);\n      color: white;\n      text-align: center;\n      padding: 30px 20px;\n    }\n    .header h1 {\n      margin: 0;\n      font-size: 32px;\n      letter-spacing: 1px;\n    }\n    .body {\n      padding: 25px;\n      color: #333;\n      text-align: center;\n      line-height: 1.8;\n    }\n    .body p {\n      font-size: 18px;\n      margin-bottom: 16px;\n    }\n    .offer-img {\n      width: 100%;\n      max-width: 500px;\n      border-radius: 10px;\n      margin: 20px 0;\n    }\n    .cta-button {\n      background: linear-gradient(90deg, #ff7b00, #ff006e);\n      color: white;\n      text-decoration: none;\n      padding: 14px 30px;\n      border-radius: 8px;\n      display: inline-block;\n      margin-top: 20px;\n      font-size: 18px;\n      font-weight: bold;\n    }\n    .cta-button:hover {\n      background: linear-gradient(90deg, #ff8a33, #ff2288);\n    }\n    .footer {\n      background-color: #ff7b00;\n      color: white;\n      text-align: center;\n      padding: 15px;\n      font-size: 14px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🎉 30% OFF Just for You! 🎉</h1>\n    </div>\n    <div class=\"body\">\n      <p>Dear {{ $json.Name }} ,</p>\n      <img class=\"offer-img\" src=\"https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\" alt=\"Special Discount Offer\" />\n      <p>We’re celebrating our loyal customers with a <strong>special 30% discount</strong> on all our products!</p>\n      <p>Don’t miss this chance to grab your favorite items at an unbeatable price. ✨</p>\n      <a href=\"\" class=\"cta-button\">Claim Your 30% OFF</a>\n      <p>Hurry — offer ends soon!</p>\n      <p><strong>From, Hariprasanth Madhavan & Team</strong></p>\n    </div>\n    <div class=\"footer\">\n      ❤️ Thank you for being part of our community ❤️\n    </div>\n  </div>\n</body>\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ecf5b365-d4e6-4853-a8a1-25f184710303",
+      "name": "Offers",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        416
+      ],
+      "webhookId": "5d5b5023-9125-4e11-9b35-87bb88630c4f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6UqWbbqttebdCgrp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        224
+      ],
+      "id": "e408c13f-cb9b-45c4-ac51-bd3b1dc04635",
+      "name": "RunNow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Happy Anniverasry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Happy Birthday ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Offers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get customer data from Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RunNow": {
+      "main": [
+        [
+          {
+            "node": "Get customer data from Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "1cc0b2f7-1def-46a6-a0dd-35058db465a7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "TFQuPyobNTzR0oCm",
+  "tags": [
+    {
+      "updatedAt": "2025-12-06T06:04:46.995Z",
+      "createdAt": "2025-12-06T06:04:46.995Z",
+      "id": "57ANu6gS7wouUA99",
+      "name": "Weekend Challenge"
+    }
+  ]
+}
