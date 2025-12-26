@@ -1,0 +1,850 @@
+{
+  "name": "Newsletter Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "2ade3f2a-ee9c-4795-b6ba-c799e3298f43",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "search-query",
+              "name": "searchQuery",
+              "value": "={{ $json.text || 'latest AI news artificial intelligence' }}",
+              "type": "string"
+            },
+            {
+              "id": "days-back",
+              "name": "daysBack",
+              "value": "5",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "af648fca-b691-459c-b25c-0e31391ba604",
+      "name": "Extract Search Parameters",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -1088,
+        192
+      ],
+      "notes": "Extract search query from trigger or use default"
+    },
+    {
+      "parameters": {
+        "url": "https://serpapi.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "engine",
+              "value": "google"
+            },
+            {
+              "name": "q",
+              "value": "={{ $json.searchQuery }}"
+            },
+            {
+              "name": "tbm",
+              "value": "nws"
+            },
+            {
+              "name": "tbs",
+              "value": "qdr:w"
+            },
+            {
+              "name": "num",
+              "value": "10"
+            },
+            {
+              "name": "api_key",
+              "value": "e3a08dec38d61c193b4dbf247d81c092a9d12dd1fa65ebed01cb5c5511629ac2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "254c0034-ada9-4d96-88f1-2adbc0b6094f",
+      "name": "Fetch Recent AI News",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -864,
+        192
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "xAwiASM9PwApISPu",
+          "name": "Unnamed credential"
+        },
+        "httpBearerAuth": {
+          "id": "OBWJ7U6RdWBjcbsQ",
+          "name": "Bearer Auth account"
+        }
+      },
+      "notes": "Fetch recent news from last 5 days using SerpAPI"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and process news articles\nconst newsData = $json.news_results || [];\n\n// Take top 5 articles and structure them\nconst articles = newsData.slice(0, 5).map((article, idx) => {\n  return {\n    number: idx + 1,\n    title: article.title || 'No title',\n    source: article.source || 'Unknown',\n    date: article.date || 'Recent',\n    snippet: article.snippet || '',\n    link: article.link || '',\n    thumbnail: article.thumbnail || ''\n  };\n});\n\n// Create a comprehensive summary for AI processing\nconst newsSummary = articles.map((a, idx) => \n  `Article ${a.number}: ${a.title}\\nSource: ${a.source} | Date: ${a.date}\\nSummary: ${a.snippet}\\nLink: ${a.link}\\n`\n).join('\\n---\\n');\n\nreturn {\n  json: {\n    articles: articles,\n    articleCount: articles.length,\n    newsSummary: newsSummary,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "46449c11-58cd-464f-b36d-3bf2e32e3d39",
+      "name": "Process Top 5 News Articles",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        192
+      ],
+      "notes": "Extract top 5 articles and structure data"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI news analyzer. Create detailed, engaging paragraphs for each of these 5 news articles about AI. For each article:\\n\\n1. Write a comprehensive paragraph (150-200 words) that:\\n   - Expands on the key points\\n   - Provides context and significance\\n   - Explains the impact on the AI industry\\n   - Adds expert perspective\\n\\n2. Make it engaging and informative\\n3. Use professional yet accessible language\\n\\nNews Articles:\\n{{ $json.newsSummary }}\\n\\nReturn the response in JSON format:\\n{\\n  \\\"articles\\\": [\\n    {\\n      \\\"title\\\": \\\"...\\\",\\n      \\\"paragraph\\\": \\\"...\\\",\\n      \\\"keyPoints\\\": [\\\"...\\\", \\\"...\\\", \\\"...\\\"]\\n    }\\n  ]\\n}",
+        "batching": {}
+      },
+      "id": "ed32aeb5-7fff-49d3-8212-2e82acec9d09",
+      "name": "AI News Enrichment Agent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -416,
+        64
+      ],
+      "notes": "Use AI to create detailed paragraphs for each news article"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse AI-enriched content and original articles\nconst aiOutput = $input.first().json.output;\nconst originalData = $input.last().json;\n\nlet enrichedArticles;\ntry {\n  // Try to parse JSON response from AI\n  const parsed = JSON.parse(aiOutput);\n  enrichedArticles = parsed.articles || [];\n} catch (e) {\n  // If parsing fails, create structure from original data\n  enrichedArticles = originalData.articles || [];\n}\n\n// Merge original article data with AI-enriched content\nconst finalArticles = originalData.articles.map((article, idx) => {\n  const enriched = enrichedArticles[idx] || {};\n  return {\n    ...article,\n    detailedParagraph: enriched.paragraph || article.snippet,\n    keyPoints: enriched.keyPoints || [],\n    enrichedTitle: enriched.title || article.title\n  };\n});\n\n// Create formatted summary for newsletter\nconst formattedSummary = finalArticles.map((a, idx) => `\\n## ${a.number}. ${a.enrichedTitle}\\n\\n**Source:** ${a.source} | **Date:** ${a.date}\\n\\n${a.detailedParagraph}\\n\\n**Key Takeaways:**\\n${a.keyPoints.map(p => `- ${p}`).join('\\n')}\\n\\n[Read More](${a.link})\\n`).join('\\n---\\n');\n\nreturn {\n  json: {\n    articles: finalArticles,\n    formattedSummary: formattedSummary,\n    articleCount: finalArticles.length,\n    summary: `Here are the top ${finalArticles.length} AI news stories from the past 5 days, with in-depth analysis and insights.`\n  }\n};"
+      },
+      "id": "2a940466-f83c-400b-8099-84468dae19d6",
+      "name": "Merge Enriched News Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        192
+      ],
+      "notes": "Combine AI-enriched content with original data"
+    },
+    {
+      "parameters": {},
+      "id": "fe79f613-dc74-47c8-95d5-97c19ded4ae5",
+      "name": "Merge News Sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        -368
+      ],
+      "notes": "Combine AI response with original data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "newsletter-html",
+              "name": "newsletterHtml",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "channel-type",
+              "name": "channel",
+              "value": "email",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ae064313-4306-4d40-b139-6cb16356b6b1",
+      "name": "Channel Processor1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1264,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.text || 'AI newsletter';\nconst trimmed = text.replace(/\\\\n/g, ' ').slice(0, 180);\nconst styleHints = ['minimalist', 'modern', 'tech gradients'];\nreturn [{\n  json: {\n    imagePrompt: `Create a 16:9 header image for an AI newsletter. Theme: ${trimmed}. Style: ${styleHints[Math.floor(Math.random()*styleHints.length)]}`\n  }\n}];"
+      },
+      "id": "61763344-a3e5-40f1-bc64-a4b4510a89fb",
+      "name": "MCP Image Agent1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an MCP summarizer. Merge the following contextual summaries into one cohesive newsletter summary (2-3 paragraphs). Emphasize the key innovations and industry impact.\\n\\nTech Context:\\n{{ $json.tech }}\\n\\nBusiness Context:\\n{{ $json.business }}\\n\\nEthics Context:\\n{{ $json.ethics }}",
+        "batching": {}
+      },
+      "id": "2ed61d20-0bf9-4171-b553-e1f638c03788",
+      "name": "MCP Summary Composer1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        960,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI workflow controller. Analyze incoming research summaries and decide what to do next. If no articles found, generate fallback insights. If articles exist, categorize them into: Tech, Business, and Regulation. Return structured JSON: {\"tech\": [...], \"business\": [...], \"ethics\": [...], \"fallback\": \"\"}.\\n\\nInput:\\n{{ $json.researchSummary }}",
+        "batching": {}
+      },
+      "id": "fa2d0582-7e13-416e-b2bc-d82de5e1b526",
+      "name": "AI Agent Orchestrator1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        608,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "research-summary",
+              "name": "researchSummary",
+              "value": "={{ $json.formattedSummary || 'No research data available. Generate insights on current AI trends.' }}",
+              "type": "string"
+            },
+            {
+              "id": "articles-data",
+              "name": "articlesData",
+              "value": "={{ JSON.stringify($json.articles) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c8129e58-89f9-44c1-8faa-df674653552d",
+      "name": "Research Input Processor1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        384,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "720f5aeb-5029-444a-a879-d728c4444507",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        400,
+        720
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "60pGqSdbo5ROvzou",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "19CD2fdQJqGssSkxX--VJ4oXMRfr0CzxpcBZBnYvv6M4",
+          "mode": "list",
+          "cachedResultName": "newsletter_cutomers",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19CD2fdQJqGssSkxX--VJ4oXMRfr0CzxpcBZBnYvv6M4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "cutomer_master",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19CD2fdQJqGssSkxX--VJ4oXMRfr0CzxpcBZBnYvv6M4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "04f97640-9f88-41f2-b170-000f8f4c15a1",
+      "name": "Read Customer Data from Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        1312,
+        480
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wrK2u6QIuRk4RbTb",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Fetch customer subscription data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "subscription-check",
+              "leftValue": "={{ $json.SubscriptionStatus }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "email-or-slack-check",
+              "leftValue": "={{ $json.Email || $json.SlackChannel }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "831444f9-b404-43c5-9d3e-6380d2e86ea7",
+      "name": "Filter Subscribed Customers1",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        480
+      ],
+      "notes": "Only include subscribed users"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all subscribed customers\nconst customers = $input.all();\n\n// Separate by delivery preference\nconst emailCustomers = [];\nconst slackCustomers = [];\nconst bothCustomers = [];\n\ncustomers.forEach(customer => {\n  const data = customer.json;\n  const hasEmail = data.Email && data.Email.includes('@');\n  const hasSlack = data.SlackChannel && data.SlackChannel.trim() !== '';\n  \n  if (hasEmail && hasSlack) {\n    bothCustomers.push(data);\n  } else if (hasEmail) {\n    emailCustomers.push(data);\n  } else if (hasSlack) {\n    slackCustomers.push(data);\n  }\n});\n\n// Group emails for batch sending\nconst emailList = [...emailCustomers, ...bothCustomers]\n  .map(c => c.Email)\n  .filter((email, index, self) => self.indexOf(email) === index);\n\n// Group Slack channels\nconst slackChannels = [...slackCustomers, ...bothCustomers]\n  .map(c => c.SlackChannel)\n  .filter((channel, index, self) => self.indexOf(channel) === index);\n\nreturn {\n  json: {\n    totalCustomers: customers.length,\n    emailRecipients: emailList,\n    slackChannels: slackChannels,\n    emailCount: emailList.length,\n    slackCount: slackChannels.length,\n    customerData: customers.map(c => c.json)\n  }\n};"
+      },
+      "id": "ca81e3bd-f906-4da8-b153-38ca047949bb",
+      "name": "Organize Recipients1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        480
+      ],
+      "notes": "Organize customers by delivery preference"
+    },
+    {
+      "parameters": {
+        "jsCode": "const newsletterText =\n  $json.html ||\n  $json.output ||\n  $json.text ||\n  $json.content ||\n  \"No content available\";\n\nconst image =\n  $json.imageUrl || \"\";\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n  <title>AI Newsletter</title>\n  <style>\n    body {\n      font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;\n      background: #f4f4f4;\n      padding: 20px;\n    }\n    .container {\n      background: #ffffff;\n      max-width: 800px;\n      margin: auto;\n      padding: 40px;\n      border-radius: 10px;\n    }\n    .header {\n      text-align: center;\n      margin-bottom: 30px;\n    }\n    .content {\n      font-size: 16px;\n      line-height: 1.7;\n      color: #333;\n    }\n    .footer {\n      margin-top: 40px;\n      font-size: 12px;\n      text-align: center;\n      color: #888;\n    }\n    img {\n      max-width: 100%;\n      border-radius: 8px;\n      margin-bottom: 20px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🤖 AI Newsletter</h1>\n      <p>Your Daily AI Insights</p>\n    </div>\n\n    ${image ? `<img src=\"${image}\" />` : \"\"}\n\n    <div class=\"content\">\n      ${newsletterText}\n    </div>\n\n    <div class=\"footer\">\n      <p>Powered by AI Research | OpenAI & MCP</p>\n      <p><a href=\"#\">Unsubscribe</a> | <a href=\"#\">View in Browser</a></p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\nreturn {\n  json: {\n    email: $json.email,\n    subject: $json.subject,\n    htmlContent\n  }\n};\n"
+      },
+      "id": "6944a89e-a26d-4f2c-ac88-0b22d7797e59",
+      "name": "Format for Email & Slack1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2336,
+        288
+      ],
+      "notes": "Create HTML email and Slack message formats"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get customer data\nconst customerData = $json.customerInfo;\nconst emailRecipients = customerData.emailRecipients || [];\n\nif (emailRecipients.length === 0) {\n  return [];\n}\n\n// Split into multiple items for batch sending\nreturn emailRecipients.map(email => ({\n  json: {\n    email: email,\n    subject: $json.subject,\n    htmlContent: $json.htmlContent,\n    customerDetails: customerData.customerData.find(c => c.Email === email)\n  }\n}));"
+      },
+      "id": "e07ab56b-96fc-4bc8-9f94-fa7a8a08ae8f",
+      "name": "Split Email Recipients1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2560,
+        192
+      ],
+      "notes": "Create separate items for each email recipient"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.htmlContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "8d0b8e46-279c-4fe6-a004-6fe115a3287f",
+      "name": "Send Email Newsletter1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2784,
+        192
+      ],
+      "webhookId": "3876a41d-4b68-458f-8e74-54b306f9ebd2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6UqWbbqttebdCgrp",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Send personalized email to each subscriber"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get customer data\nconst customerData = $json.customerInfo;\nconst slackChannels = customerData.slackChannels || [];\n\nif (slackChannels.length === 0) {\n  return [];\n}\n\n// Create items for each Slack channel\nreturn slackChannels.map(channel => ({\n  json: {\n    channel: channel,\n    slackBlocks: $json.slackBlocks,\n    customers: customerData.customerData.filter(c => c.SlackChannel === channel)\n  }\n}));"
+      },
+      "id": "148d261b-a80d-4a06-a4f6-76a31a80c4c0",
+      "name": "Split Slack Channels1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2560,
+        384
+      ],
+      "notes": "Create items for each Slack channel"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A39TLL1U5",
+          "mode": "list",
+          "cachedResultName": "newsletter"
+        },
+        "messageType": "block",
+        "blocksUi": "={{ JSON.stringify($json.slackBlocks) }}",
+        "text": "={{ $json.slackBlocks[0].text }}",
+        "otherOptions": {
+          "unfurl_links": false,
+          "unfurl_media": true
+        }
+      },
+      "id": "0c7c8634-16c3-455c-a143-5e3405b452ec",
+      "name": "Post to Slack Channel1",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        2784,
+        384
+      ],
+      "webhookId": "3627e25b-6a77-4945-8bbd-05a6599b3e3c",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "t5mUCHiOdpl835KA",
+          "name": "Slack account 3"
+        }
+      },
+      "notes": "Post newsletter to specified Slack channels"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": {{ JSON.stringify($json.imagePrompt) }},\n  \"n\": 1,\n  \"size\": \"1792x1024\",\n  \"model\": \"dall-e-3\"\n}",
+        "options": {}
+      },
+      "id": "1876e168-ed78-4ee3-aab8-46b345555759",
+      "name": "Generate Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1536,
+        240
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "60pGqSdbo5ROvzou",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a personalization AI agent. Adapt the following newsletter text for the target medium:\\nIf channel == Slack: use friendly tone + emojis.\\nIf channel == Email: use professional tone + greetings.\\n\\nText:\\n{{ $json.newsletterHtml }}\\n\\nChannel: {{ $json.channel || 'email' }}",
+        "batching": {}
+      },
+      "id": "935edc0d-0dc3-471d-8355-19d5b7177f65",
+      "name": "AI  Agent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1648,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Use incoming data only (no node name dependency)\n\nconst html =\n  $json.output ||\n  $json.text ||\n  $json.content ||\n  \"Newsletter content unavailable\";\n\nconst imageUrl =\n  $json.imageUrl ||\n  $json.image ||\n  \"\";\n\nreturn {\n  json: {\n    html,\n    imageUrl,\n    status: \"ready\",\n    createdAt: new Date().toISOString(),\n  }\n};\n"
+      },
+      "id": "57a279b5-488f-48fb-9eb0-7579592e1fed",
+      "name": "Merge",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "fac01db0-76c7-4695-869b-bd95b1641b2e",
+      "name": "Merge Newsletter & Customers",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        288
+      ],
+      "notesInFlow": true,
+      "notes": "Combine newsletter content with customer data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Search Parameters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Search Parameters": {
+      "main": [
+        [
+          {
+            "node": "Fetch Recent AI News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Recent AI News": {
+      "main": [
+        [
+          {
+            "node": "Process Top 5 News Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Top 5 News Articles": {
+      "main": [
+        [
+          {
+            "node": "AI News Enrichment Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge News Sources",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI News Enrichment Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge News Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge News Sources": {
+      "main": [
+        [
+          {
+            "node": "Merge Enriched News Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Enriched News Data": {
+      "main": [
+        [
+          {
+            "node": "Research Input Processor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel Processor1": {
+      "main": [
+        [
+          {
+            "node": "AI  Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Image Agent1": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Summary Composer1": {
+      "main": [
+        [
+          {
+            "node": "MCP Image Agent1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Channel Processor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Orchestrator1": {
+      "main": [
+        [
+          {
+            "node": "MCP Summary Composer1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Input Processor1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Orchestrator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI  Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "MCP Summary Composer1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent Orchestrator1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI News Enrichment Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Customer Data from Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Filter Subscribed Customers1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Subscribed Customers1": {
+      "main": [
+        [
+          {
+            "node": "Organize Recipients1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organize Recipients1": {
+      "main": [
+        [
+          {
+            "node": "Merge Newsletter & Customers",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Format for Email & Slack1": {
+      "main": [
+        [
+          {
+            "node": "Split Email Recipients1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Slack Channels1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Email Recipients1": {
+      "main": [
+        [
+          {
+            "node": "Send Email Newsletter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Newsletter1": {
+      "main": [
+        []
+      ]
+    },
+    "Split Slack Channels1": {
+      "main": [
+        [
+          {
+            "node": "Post to Slack Channel1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Slack Channel1": {
+      "main": [
+        []
+      ]
+    },
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI  Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge Newsletter & Customers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Newsletter & Customers": {
+      "main": [
+        [
+          {
+            "node": "Format for Email & Slack1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v0",
+    "availableInMCP": false
+  },
+  "versionId": "e3d56560-90bd-4b07-ab91-f593d994525c",
+  "meta": {
+    "templateId": "3986",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "BswBsztGi7xikXpi",
+  "tags": []
+}

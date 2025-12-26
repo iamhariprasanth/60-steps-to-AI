@@ -1,0 +1,315 @@
+{
+  "name": "AI Newsletter Workflow (Fixed)",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Merge personalized text with generated image\nconst personalizedText = $('AI Audience Personalization Agent').first().json.output;\nconst imageUrl = $('Generate Newsletter Image').first().json.data?.[0]?.url || '';\n\nreturn [{\n  json: {\n    finalNewsletter: personalizedText,\n    imageUrl: imageUrl,\n    timestamp: new Date().toISOString(),\n    status: 'ready_to_send'\n  }\n}];"
+      },
+      "id": "f6124373-87f3-4cf2-8702-6e58c14d684d",
+      "name": "Merge Newsletter Components",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": {{ JSON.stringify($json.imagePrompt) }},\n  \"n\": 1,\n  \"size\": \"1792x1024\",\n  \"model\": \"dall-e-3\"\n}",
+        "options": {
+          "response": {}
+        }
+      },
+      "id": "52c98c64-2dae-45bc-a13b-b9d57ffb3f00",
+      "name": "Generate Newsletter Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        480
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "60pGqSdbo5ROvzou",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a personalization AI agent. Adapt the following newsletter text for the target medium:\\nIf channel == Slack: use friendly tone + emojis.\\nIf channel == Email: use professional tone + greetings.\\n\\nText:\\n{{ $json.newsletterHtml }}\\n\\nChannel: {{ $json.channel || 'email' }}",
+        "batching": {}
+      },
+      "id": "c4b9c721-45b7-4dff-909f-6c127b67cef1",
+      "name": "AI Audience Personalization Agent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        16,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "newsletter-html",
+              "name": "newsletterHtml",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "channel-type",
+              "name": "channel",
+              "value": "email",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3065daf1-706a-406c-a5b2-ba0bfcf92a8c",
+      "name": "Channel Processor",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -208,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.text || 'AI newsletter';\nconst trimmed = text.replace(/\\\\n/g, ' ').slice(0, 180);\nconst styleHints = ['minimalist', 'modern', 'tech gradients'];\nreturn [{\n  json: {\n    imagePrompt: `Create a 16:9 header image for an AI newsletter. Theme: ${trimmed}. Style: ${styleHints[Math.floor(Math.random()*styleHints.length)]}`\n  }\n}];"
+      },
+      "id": "c79b6213-c25f-4047-8b85-d82dce9a74d9",
+      "name": "MCP Image Agent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an MCP summarizer. Merge the following contextual summaries into one cohesive newsletter summary (2-3 paragraphs). Emphasize the key innovations and industry impact.\\n\\nTech Context:\\n{{ $json.tech }}\\n\\nBusiness Context:\\n{{ $json.business }}\\n\\nEthics Context:\\n{{ $json.ethics }}",
+        "batching": {}
+      },
+      "id": "f75df38f-e912-416b-a5d4-682d2d890a54",
+      "name": "MCP Summary Composer",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -592,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI workflow controller. Analyze incoming research summaries and decide what to do next. If no articles found, generate fallback insights. If articles exist, categorize them into: Tech, Business, and Regulation. Return structured JSON: {\"tech\": [...], \"business\": [...], \"ethics\": [...], \"fallback\": \"\"}.\\n\\nInput:\\n{{ $json.researchSummary }}",
+        "batching": {}
+      },
+      "id": "92edead4-8738-481b-be96-afa61d8628ca",
+      "name": "AI Agent Orchestrator",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -944,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "research-summary",
+              "name": "researchSummary",
+              "value": "{{ $json.summary || 'No research data available. Generate insights on current AI trends.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "77ed5248-e65a-4f54-9932-0dc78b9c2a27",
+      "name": "Research Input Processor",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -1136,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "213b9efd-dcc9-4aa5-90c1-6287d64ab35a",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        608
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "60pGqSdbo5ROvzou",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "aeed92ad-dbd4-4ae1-a25c-e96bb5d60a2c",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        384
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Generate Newsletter Image": {
+      "main": [
+        [
+          {
+            "node": "Merge Newsletter Components",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Audience Personalization Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge Newsletter Components",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Channel Processor": {
+      "main": [
+        [
+          {
+            "node": "AI Audience Personalization Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Image Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Newsletter Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Summary Composer": {
+      "main": [
+        [
+          {
+            "node": "MCP Image Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Channel Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "MCP Summary Composer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Input Processor": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Audience Personalization Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "MCP Summary Composer",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent Orchestrator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Research Input Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "492b803e-d60e-4e3d-b386-66d6459d2bb5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "jESXOExL7NYxBPQU",
+  "tags": []
+}

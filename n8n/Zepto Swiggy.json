@@ -1,0 +1,156 @@
+{
+  "name": "Zepto Swiggy",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -224,
+        -112
+      ],
+      "id": "b8f614e5-2fc9-46df-bd41-7eddad55d89c",
+      "name": "When chat message received",
+      "webhookId": "9fb3ce6c-e2e9-4909-8177-7c0816fe7837"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Call the tool based on the user query  {{ $json.chatInput }}\n\nif the user asks a general query respond from a LLM",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        -112
+      ],
+      "id": "ebc6ad1e-018a-4b67-a166-37bd328e96f4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -144,
+        160
+      ],
+      "id": "6a0e7890-7c0a-4201-ba81-d954e22a26ea",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "60pGqSdbo5ROvzou",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        16,
+        160
+      ],
+      "id": "202e0f91-e262-4b9e-beb4-651f3d5b3d92",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "MZkMBETZgclECPRL",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/MZkMBETZgclECPRL",
+          "cachedResultName": "Zepto Swiggy"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        176
+      ],
+      "id": "cd281979-6e8f-4da7-90ad-743917fc46b8",
+      "name": "Call 'Zepto Swiggy'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Zepto Swiggy'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "11ae7539-b70f-4698-b2de-0c58ba694c93",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d2b790303bfdca581442c14d0b3bd4276ea71e32a22e4d4933cc1aca9c837ca2"
+  },
+  "id": "MZkMBETZgclECPRL",
+  "tags": []
+}
